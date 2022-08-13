@@ -1,4 +1,5 @@
 export default {
+  demo: 'Vben Demo',
   charts: {
     baiduMap: 'Baidu map',
     aMap: 'A map',

@@ -1,4 +1,5 @@
 export default {
+  demo: 'Vben示例',
   charts: {
     baiduMap: '百度地图',
     aMap: '高德地图',
