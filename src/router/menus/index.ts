@@ -40,6 +40,10 @@ const isRoleMode = () => {
   return getPermissionMode() === PermissionModeEnum.ROLE;
 };
 
+const isAclMode = () => {
+  return getPermissionMode() === PermissionModeEnum.ACL;
+};
+
 const staticMenus: Menu[] = [];
 (() => {
   menuModules.sort((a, b) => {
@@ -56,7 +60,7 @@ async function getAsyncMenus() {
   if (isBackMode()) {
     return permissionStore.getBackMenuList.filter((item) => !item.meta?.hideMenu && !item.hideMenu);
   }
-  if (isRouteMappingMode()) {
+  if (isRouteMappingMode() || isAclMode()) {
     return permissionStore.getFrontMenuList.filter((item) => !item.hideMenu);
   }
   return staticMenus;
@@ -68,7 +72,6 @@ export const getMenus = async (): Promise<Menu[]> => {
     const routes = router.getRoutes();
     return filter(menus, basicFilter(routes));
   }
-  console.log(menus);
   return menus;
 };
 

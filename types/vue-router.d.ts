@@ -13,6 +13,8 @@ declare module 'vue-router' {
     ignoreAuth?: boolean;
     // role info
     roles?: RoleEnum[];
+    // acl array, role or code
+    acl?: (RoleEnum | string)[];
     // Whether not to cache
     ignoreKeepAlive?: boolean;
     // Is it fixed on tab
