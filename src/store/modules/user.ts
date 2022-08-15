@@ -1,21 +1,21 @@
+import { h } from 'vue';
 import type { UserInfo } from '/#/store';
 import type { ErrorMessageMode } from '/#/axios';
+import { isArray } from '/@/utils/is';
 import { defineStore } from 'pinia';
 import { store } from '/@/store';
 import { RoleEnum } from '/@/enums/roleEnum';
 import { PageEnum } from '/@/enums/pageEnum';
-import { REFRESH_TOKEN_KEY, REFRESH_UCT_EXPIRES_KEY, ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
-import { getAuthCache, getRefreshToken, getRefreshUctExpires, setAuthCache } from '/@/utils/auth';
-import { GetUserInfoModel, GrantTypeEnum, LoginParams, LoginResultModel } from '/@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
 import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
-import { isArray } from '/@/utils/is';
-import { h } from 'vue';
+import { REFRESH_TOKEN_KEY, REFRESH_UCT_EXPIRES_KEY, ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
+import { getAuthCache, getRefreshToken, getRefreshUctExpires, setAuthCache } from '/@/utils/auth';
+import { GetUserInfoModel, GrantTypeEnum, LoginParams, LoginResultModel, RegisterParams, RegisterResultModel } from '/@/api/sys/model/userModel';
+import { doLogout, getUserInfo, loginApi, registerApi } from '/@/api/sys/user';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -65,9 +65,12 @@ export const useUserStore = defineStore({
     },
   },
   actions: {
-    setToken(model?: LoginResultModel) {
+    setToken(info: string | undefined) {
+      this.token = info || '';
+      setAuthCache(TOKEN_KEY, info);
+    },
+    setRefreshToken(model?: LoginResultModel) {
       if (!model) {
-        this.token = undefined;
         this.refreshToken = undefined;
         this.refreshUctExpires = undefined;
         setAuthCache(TOKEN_KEY, null);
@@ -75,11 +78,9 @@ export const useUserStore = defineStore({
         setAuthCache(REFRESH_UCT_EXPIRES_KEY, null);
         return;
       }
-      const { accessToken, refreshToken, refreshUctExpires } = model;
-      this.token = accessToken;
+      const { refreshToken, refreshUctExpires } = model;
       this.refreshToken = refreshToken;
       this.refreshUctExpires = refreshUctExpires;
-      setAuthCache(TOKEN_KEY, accessToken);
       setAuthCache(REFRESH_TOKEN_KEY, refreshToken);
       setAuthCache(REFRESH_UCT_EXPIRES_KEY, refreshUctExpires);
     },
@@ -112,10 +113,11 @@ export const useUserStore = defineStore({
     ): Promise<GetUserInfoModel | null> {
       try {
         const { goHome = true, mode, ...loginParams } = params;
-        const data = await loginApi(loginParams, mode);
+        const model = await loginApi(loginParams, mode);
 
         // save token
-        this.setToken(data);
+        this.setToken(model?.accessToken);
+        this.setRefreshToken(model);
         return this.afterLoginAction(goHome);
       } catch (error) {
         return Promise.reject(error);
@@ -154,8 +156,9 @@ export const useUserStore = defineStore({
         grantType: GrantTypeEnum.refreshToken,
         refreshToken: refreshToken,
       };
-      const data = await loginApi(params, 'none');
-      this.setToken(data);
+      const model = await loginApi(params, 'none');
+      this.setToken(model?.accessToken);
+      this.setRefreshToken(model);
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
       if (!this.getToken) return null;
@@ -214,6 +217,10 @@ export const useUserStore = defineStore({
           await this.logout(true);
         },
       });
+    },
+    async register(params: RegisterParams): Promise<RegisterResultModel | undefined> {
+      const model = await registerApi(params);
+      return model;
     },
   },
 });

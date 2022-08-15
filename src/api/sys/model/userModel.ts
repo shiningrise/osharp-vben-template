@@ -44,7 +44,6 @@ export interface Profile {
  * @description: Get user information return value
  */
 export interface GetUserInfoModel {
-  roles: RoleInfo[];
   // 用户id
   userId: string | number;
   // 用户名
@@ -52,7 +51,25 @@ export interface GetUserInfoModel {
   // 真实名字
   realName: string;
   // 头像
-  avatar: string;
+  avatar?: string;
   // 介绍
   desc?: string;
+  roles: RoleInfo[];
+}
+
+export interface RegisterParams {
+  userName?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  nickName?: string;
+  captcha?: string;
+  captchaId?: string;
+  policy?: boolean;
+}
+
+export interface RegisterResultModel {
+  userName: string;
+  nickName: string;
+  email?: string;
 }
