@@ -77,7 +77,7 @@
 <script lang="ts">
   import { defineComponent, ref, unref } from 'vue';
   import { QrCode, QrCodeActionType } from '/@/components/Qrcode/index';
-  import LogoImg from '/@/assets/images/logo.png';
+  import LogoImg from '/@/assets/osharp/images/logo.png';
   import { CollapseContainer } from '/@/components/Container/index';
   import { PageWrapper } from '/@/components/Page';
 
