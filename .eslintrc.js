@@ -15,11 +15,7 @@ module.exports = {
       jsx: true,
     },
   },
-  extends: [
-    'plugin:vue/vue3-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
-  ],
+  extends: ['plugin:vue/vue3-recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
   rules: {
     'vue/script-setup-uses-vars': 'error',
     '@typescript-eslint/ban-ts-ignore': 'off',
@@ -35,14 +31,14 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-unused-vars': [
-      'error',
+      'off',
       {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
       },
     ],
     'no-unused-vars': [
-      'error',
+      'off',
       {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
