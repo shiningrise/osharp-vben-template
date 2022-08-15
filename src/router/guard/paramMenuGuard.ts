@@ -45,3 +45,7 @@ const isBackMode = () => {
 const isRouteMappingMode = () => {
   return getPermissionMode() === PermissionModeEnum.ROUTE_MAPPING;
 };
+
+const isAclMode = () => {
+  return getPermissionMode() === PermissionModeEnum.ACL;
+};

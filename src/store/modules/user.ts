@@ -1,25 +1,27 @@
+import { h } from 'vue';
 import type { UserInfo } from '/#/store';
 import type { ErrorMessageMode } from '/#/axios';
+import { isArray } from '/@/utils/is';
 import { defineStore } from 'pinia';
 import { store } from '/@/store';
 import { RoleEnum } from '/@/enums/roleEnum';
 import { PageEnum } from '/@/enums/pageEnum';
-import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
-import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
 import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
-import { isArray } from '/@/utils/is';
-import { h } from 'vue';
+import { REFRESH_TOKEN_KEY, REFRESH_UCT_EXPIRES_KEY, ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
+import { getAuthCache, getRefreshToken, getRefreshUctExpires, setAuthCache } from '/@/utils/auth';
+import { GetUserInfoModel, GrantTypeEnum, LoginParams, LoginResultModel, RegisterParams, RegisterResultModel } from '/@/api/sys/model/userModel';
+import { doLogout, getUserInfo, loginApi, registerApi } from '/@/api/sys/user';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
   token?: string;
+  refreshToken?: string;
+  refreshUctExpires?: number;
   roleList: RoleEnum[];
   sessionTimeout?: boolean;
   lastUpdateTime: number;
@@ -46,6 +48,12 @@ export const useUserStore = defineStore({
     getToken(): string {
       return this.token || getAuthCache<string>(TOKEN_KEY);
     },
+    getRefreshToken(): string {
+      return this.refreshToken || getAuthCache<string>(REFRESH_TOKEN_KEY);
+    },
+    getRefreshUctExpires(): number {
+      return this.refreshUctExpires || getAuthCache<number>(REFRESH_UCT_EXPIRES_KEY);
+    },
     getRoleList(): RoleEnum[] {
       return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
     },
@@ -58,8 +66,23 @@ export const useUserStore = defineStore({
   },
   actions: {
     setToken(info: string | undefined) {
-      this.token = info ? info : ''; // for null or undefined value
+      this.token = info || '';
       setAuthCache(TOKEN_KEY, info);
+    },
+    setRefreshToken(model?: LoginResultModel) {
+      if (!model) {
+        this.refreshToken = undefined;
+        this.refreshUctExpires = undefined;
+        setAuthCache(TOKEN_KEY, null);
+        setAuthCache(REFRESH_TOKEN_KEY, null);
+        setAuthCache(REFRESH_UCT_EXPIRES_KEY, null);
+        return;
+      }
+      const { refreshToken, refreshUctExpires } = model;
+      this.refreshToken = refreshToken;
+      this.refreshUctExpires = refreshUctExpires;
+      setAuthCache(REFRESH_TOKEN_KEY, refreshToken);
+      setAuthCache(REFRESH_UCT_EXPIRES_KEY, refreshUctExpires);
     },
     setRoleList(roleList: RoleEnum[]) {
       this.roleList = roleList;
@@ -90,11 +113,11 @@ export const useUserStore = defineStore({
     ): Promise<GetUserInfoModel | null> {
       try {
         const { goHome = true, mode, ...loginParams } = params;
-        const data = await loginApi(loginParams, mode);
-        const { token } = data;
+        const model = await loginApi(loginParams, mode);
 
         // save token
-        this.setToken(token);
+        this.setToken(model?.accessToken);
+        this.setRefreshToken(model);
         return this.afterLoginAction(goHome);
       } catch (error) {
         return Promise.reject(error);
@@ -122,9 +145,27 @@ export const useUserStore = defineStore({
       }
       return userInfo;
     },
+    async refreshTokenAction(refreshToken?: string) {
+      if (!refreshToken) {
+        refreshToken = getRefreshToken();
+        const expires = getRefreshUctExpires();
+        const now = new Date().getTime();
+        if (expires <= now) return;
+      }
+      const params: LoginParams = {
+        grantType: GrantTypeEnum.refreshToken,
+        refreshToken: refreshToken,
+      };
+      const model = await loginApi(params, 'none');
+      this.setToken(model?.accessToken);
+      this.setRefreshToken(model);
+    },
     async getUserInfoAction(): Promise<UserInfo | null> {
       if (!this.getToken) return null;
       const userInfo = await getUserInfo();
+      if (!userInfo) {
+        return null;
+      }
       const { roles = [] } = userInfo;
       if (isArray(roles)) {
         const roleList = roles.map((item) => item.value) as RoleEnum[];
@@ -133,8 +174,17 @@ export const useUserStore = defineStore({
         userInfo.roles = [];
         this.setRoleList([]);
       }
-      this.setUserInfo(userInfo);
-      return userInfo;
+
+      const user: UserInfo = {
+        userId: userInfo.userId,
+        username: userInfo.username,
+        realName: userInfo.realName,
+        avatar: userInfo.avatar,
+        desc: userInfo.desc,
+        roles: userInfo.roles,
+      };
+      this.setUserInfo(user);
+      return user;
     },
     /**
      * @description: logout
@@ -167,6 +217,10 @@ export const useUserStore = defineStore({
           await this.logout(true);
         },
       });
+    },
+    async register(params: RegisterParams): Promise<RegisterResultModel | undefined> {
+      const model = await registerApi(params);
+      return model;
     },
   },
 });

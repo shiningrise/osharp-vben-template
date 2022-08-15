@@ -2,8 +2,17 @@
  * @description: Login interface parameters
  */
 export interface LoginParams {
-  username: string;
-  password: string;
+  account?: string;
+  password?: string;
+  grantType?: GrantTypeEnum;
+  verifyCode?: string;
+  clientType?: number;
+  refreshToken?: string | any;
+}
+
+export enum GrantTypeEnum {
+  password = 'password',
+  refreshToken = 'refresh_token',
 }
 
 export interface RoleInfo {
@@ -15,16 +24,26 @@ export interface RoleInfo {
  * @description: Login interface return value
  */
 export interface LoginResultModel {
-  userId: string | number;
-  token: string;
-  role: RoleInfo;
+  accessToken: string;
+  refreshToken: string;
+  refreshUctExpires: number;
+}
+
+export interface Profile {
+  id: number;
+  userName: string;
+  nickName: string;
+  email?: string;
+  headImg?: string;
+  isAdmin: boolean;
+  isRefreshNext: boolean;
+  roles: string[];
 }
 
 /**
  * @description: Get user information return value
  */
 export interface GetUserInfoModel {
-  roles: RoleInfo[];
   // 用户id
   userId: string | number;
   // 用户名
@@ -32,7 +51,25 @@ export interface GetUserInfoModel {
   // 真实名字
   realName: string;
   // 头像
-  avatar: string;
+  avatar?: string;
   // 介绍
   desc?: string;
+  roles: RoleInfo[];
+}
+
+export interface RegisterParams {
+  userName?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  nickName?: string;
+  captcha?: string;
+  captchaId?: string;
+  policy?: boolean;
+}
+
+export interface RegisterResultModel {
+  userName: string;
+  nickName: string;
+  email?: string;
 }

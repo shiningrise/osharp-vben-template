@@ -1,28 +1,11 @@
 <template>
   <LoginFormTitle v-show="getShow" class="enter-x" />
-  <Form
-    class="p-4 enter-x"
-    :model="formData"
-    :rules="getFormRules"
-    ref="formRef"
-    v-show="getShow"
-    @keypress.enter="handleLogin"
-  >
+  <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef" v-show="getShow" @keypress.enter="handleLogin">
     <FormItem name="account" class="enter-x">
-      <Input
-        size="large"
-        v-model:value="formData.account"
-        :placeholder="t('sys.login.userName')"
-        class="fix-auto-fill"
-      />
+      <Input size="large" v-model:value="formData.account" :placeholder="t('sys.login.userName')" class="fix-auto-fill" />
     </FormItem>
     <FormItem name="password" class="enter-x">
-      <InputPassword
-        size="large"
-        visibilityToggle
-        v-model:value="formData.password"
-        :placeholder="t('sys.login.password')"
-      />
+      <InputPassword size="large" visibilityToggle v-model:value="formData.password" :placeholder="t('sys.login.password')" />
     </FormItem>
 
     <ARow class="enter-x">
@@ -85,13 +68,7 @@
   import { reactive, ref, unref, computed } from 'vue';
 
   import { Checkbox, Form, Input, Row, Col, Button, Divider } from 'ant-design-vue';
-  import {
-    GithubFilled,
-    WechatFilled,
-    AlipayCircleFilled,
-    GoogleCircleFilled,
-    TwitterCircleFilled,
-  } from '@ant-design/icons-vue';
+  import { GithubFilled, WechatFilled, AlipayCircleFilled, GoogleCircleFilled, TwitterCircleFilled } from '@ant-design/icons-vue';
   import LoginFormTitle from './LoginFormTitle.vue';
 
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -100,6 +77,7 @@
   import { useUserStore } from '/@/store/modules/user';
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { GrantTypeEnum } from '/@/api/sys/model/userModel';
   //import { onKeyStroke } from '@vueuse/core';
 
   const ACol = Col;
@@ -119,8 +97,8 @@
   const rememberMe = ref(false);
 
   const formData = reactive({
-    account: 'vben',
-    password: '123456',
+    account: 'admin',
+    password: 'osharp123456',
   });
 
   const { validForm } = useFormValid(formRef);
@@ -135,8 +113,9 @@
     try {
       loading.value = true;
       const userInfo = await userStore.login({
+        account: data.account,
         password: data.password,
-        username: data.account,
+        grantType: GrantTypeEnum.password,
         mode: 'none', //不要默认的错误提示
       });
       if (userInfo) {

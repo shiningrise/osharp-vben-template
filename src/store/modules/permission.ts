@@ -23,6 +23,8 @@ import { getPermCode } from '/@/api/sys/user';
 
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
+import { List } from 'linqts';
+import { usePermission } from '/@/hooks/web/usePermission';
 
 interface PermissionState {
   // Permission code list
@@ -122,7 +124,18 @@ export const usePermissionStore = defineStore({
       const routeFilter = (route: AppRouteRecordRaw) => {
         const { meta } = route;
         // 抽出角色
-        const { roles } = meta || {};
+        const { roles, acl } = meta || {};
+        if (permissionMode == PermissionModeEnum.ACL) {
+          const array = new List(acl || [])
+            .Union(new List(roles || []))
+            .Distinct()
+            .ToArray();
+          if (array.length == 0) {
+            return true;
+          }
+          const { hasPermission } = usePermission();
+          return hasPermission(array);
+        }
         if (!roles) return true;
         // 进行角色权限判断
         return roleList.some((role) => roles.includes(role));
@@ -243,6 +256,21 @@ export const usePermissionStore = defineStore({
 
           routeList = flatMultiLevelRoutes(routeList);
           routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
+          break;
+
+        case PermissionModeEnum.ACL:
+          await this.changePermissionCode();
+          routes = filter(asyncRoutes, routeFilter);
+          routes = routes.filter(routeFilter);
+          const aclMenus = transformRouteToMenu(routes, true);
+
+          routes = filter(routes, routeRemoveIgnoreFilter);
+          routes = routes.filter(routeRemoveIgnoreFilter);
+          aclMenus.sort((a, b) => {
+            return (a.meta?.orderNo || 0) - (b.meta?.orderNo || 0);
+          });
+          this.setFrontMenuList(aclMenus);
+          routes = flatMultiLevelRoutes(routes);
           break;
       }
 

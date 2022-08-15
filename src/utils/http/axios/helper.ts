@@ -1,11 +1,10 @@
+import { AxiosResponse } from 'axios';
+import { Result } from '/#/axios';
 import { isObject, isString } from '/@/utils/is';
 
 const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
-export function joinTimestamp<T extends boolean>(
-  join: boolean,
-  restful: T,
-): T extends true ? string : object;
+export function joinTimestamp<T extends boolean>(join: boolean, restful: T): T extends true ? string : object;
 
 export function joinTimestamp(join: boolean, restful = false): string | object {
   if (!join) {
@@ -16,6 +15,14 @@ export function joinTimestamp(join: boolean, restful = false): string | object {
     return `?_t=${now}`;
   }
   return { _t: now };
+}
+
+export function instanceOfResponse(obj: any): obj is AxiosResponse {
+  return 'config' in obj && 'status' in obj;
+}
+
+export function instanceOfResult(obj: any): obj is Result {
+  return 'type' in obj && 'content' in obj;
 }
 
 /**

@@ -18,11 +18,11 @@ export default {
       totalField: 'total',
     },
     // Number of pages that can be selected
-    pageSizeOptions: ['10', '50', '80', '100'],
+    pageSizeOptions: ['10', '15', '20', '30', '50', '100', '200', '500'],
     // Default display quantity on one page
-    defaultPageSize: 10,
+    defaultPageSize: 15,
     // Default Size
-    defaultSize: 'middle',
+    defaultSize: 'small',
     // Custom general sort function
     defaultSortFn: (sortInfo: SorterResult) => {
       const { field, order } = sortInfo;

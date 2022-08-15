@@ -29,10 +29,7 @@ export function usePermission() {
    */
   async function togglePermissionMode() {
     appStore.setProjectConfig({
-      permissionMode:
-        projectSetting.permissionMode === PermissionModeEnum.BACK
-          ? PermissionModeEnum.ROUTE_MAPPING
-          : PermissionModeEnum.BACK,
+      permissionMode: projectSetting.permissionMode === PermissionModeEnum.BACK ? PermissionModeEnum.ROUTE_MAPPING : PermissionModeEnum.BACK,
     });
     location.reload();
   }
@@ -79,6 +76,36 @@ export function usePermission() {
       }
       return (intersection(value, allCodeList) as string[]).length > 0;
     }
+    if (PermissionModeEnum.ACL === permMode) {
+      let roleList: RoleEnum[] | null = null;
+      let codeList: string[] | null = null;
+      const array: Array<RoleEnum | string> = !isArray(value) ? [value] : value;
+      if (array.length == 0) {
+        return def;
+      }
+      const isPermCode = (val: RoleEnum | string) => val && val.startsWith('Root');
+
+      //逐个判断，不是RoleEnum就是PermCode，只要有一个成立，就判断为true
+      let flag = false;
+      for (const item of array) {
+        if (!isPermCode(item)) {
+          roleList = roleList || userStore.getRoleList;
+          const role: RoleEnum = item as RoleEnum;
+          if (roleList.includes(role)) {
+            flag = true;
+            break;
+          }
+        } else {
+          const code: string = item as string;
+          codeList = codeList || (permissionStore.getPermCodeList as string[]);
+          if (codeList.includes(code)) {
+            flag = true;
+            break;
+          }
+        }
+      }
+      return flag;
+    }
     return true;
   }
 
@@ -88,9 +115,7 @@ export function usePermission() {
    */
   async function changeRole(roles: RoleEnum | RoleEnum[]): Promise<void> {
     if (projectSetting.permissionMode !== PermissionModeEnum.ROUTE_MAPPING) {
-      throw new Error(
-        'Please switch PermissionModeEnum to ROUTE_MAPPING mode in the configuration to operate!',
-      );
+      throw new Error('Please switch PermissionModeEnum to ROUTE_MAPPING mode in the configuration to operate!');
     }
 
     if (!isArray(roles)) {
