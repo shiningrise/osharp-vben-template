@@ -12,6 +12,10 @@ export interface CreateAxiosOptions extends AxiosRequestConfig {
 
 export abstract class AxiosTransform {
   /**
+   * @description: is token refreshing
+   */
+  isTokenRefreshing: boolean | undefined;
+  /**
    * @description: Process configuration before request
    * @description: Process configuration before request
    */
@@ -30,10 +34,7 @@ export abstract class AxiosTransform {
   /**
    * @description: 请求之前的拦截器
    */
-  requestInterceptors?: (
-    config: AxiosRequestConfig,
-    options: CreateAxiosOptions,
-  ) => AxiosRequestConfig;
+  requestInterceptors?: (config: AxiosRequestConfig, options: CreateAxiosOptions) => AxiosRequestConfig;
 
   /**
    * @description: 请求之后的拦截器
