@@ -10,7 +10,7 @@
 
 <template>
   <div>
-    <AdminTable v-bind="tableProps" />
+    <AdminTable v-bind="adminTableProps" />
   </div>
 </template>
 
@@ -48,7 +48,7 @@
     { label: '是否数据审计', field: 'auditEnabled', component: 'Switch', componentProps: { operate: FilterOperate.Equal }, colProps: { span: 8 } },
   ];
 
-  const tableProps: AdminTableProps = {
+  const adminTableProps: AdminTableProps = {
     module: module,
     tablePropsFn: tablePropsFn,
     tableActionsFn: tableActionsFn,

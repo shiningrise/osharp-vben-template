@@ -10,7 +10,7 @@
 
 <template>
   <div>
-    <AdminTable v-bind="tableProps" />
+    <AdminTable v-bind="adminTableProps" />
     <AdminFunctionViewDrawer @register="registerFunctionViewDrawer" v-bind="functionViewProps" width="800" />
     <AdminEditModal @register="registerSetModulesModel" :module="module" :edit-form-props-fn="setModulesFormFn" @on-close="tableMethods.reload()" />
   </div>
@@ -64,7 +64,7 @@
     { label: '是否锁定', field: 'isLocked', component: 'Switch', colProps: { span: 8 } },
   ];
 
-  const tableProps: AdminTableProps = {
+  const adminTableProps: AdminTableProps = {
     module: module,
     tablePropsFn: tablePropsFn,
     tableActionsFn: tableActionsFn,

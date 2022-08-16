@@ -10,7 +10,7 @@
 
 <template>
   <div>
-    <AdminTable v-bind="tableProps" />
+    <AdminTable v-bind="adminTableProps" />
   </div>
 </template>
 
@@ -37,7 +37,7 @@
 
   const filterSchemas: FormSchema[] = [];
 
-  const tableProps: AdminTableProps = {
+  const adminTableProps: AdminTableProps = {
     module: module,
     tablePropsFn: tablePropsFn,
     tableActionsFn: tableActionsFn,
