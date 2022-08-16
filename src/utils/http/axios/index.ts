@@ -117,7 +117,7 @@ const transform: AxiosTransform = {
       config.url = `${urlPrefix}${config.url}`;
     }
 
-    if (apiUrl && isString(apiUrl)) {
+    if (apiUrl && isString(apiUrl) && config.url?.startsWith(apiUrl + '/') == false) {
       config.url = `${apiUrl}${config.url}`;
     }
     const params = config.params || {};
@@ -220,7 +220,6 @@ const transform: AxiosTransform = {
           try {
             transform.isTokenRefreshing = true;
             await userStore.refreshTokenAction(refreshToken);
-            config.baseURL = '';
             requests.forEach((cb) => cb());
             requests = [];
             const scheme = config.authenticationScheme;
@@ -235,7 +234,6 @@ const transform: AxiosTransform = {
         } else {
           return new Promise((resolve) => {
             requests.push(() => {
-              config.baseURL = '';
               const scheme = config.authenticationScheme;
               // @ts-ignore
               const newConfig = transform.requestInterceptors(config, {
