@@ -184,7 +184,14 @@ const transform: AxiosTransform = {
     errorLogStore.addAjaxErrorInfo(error);
     const { response, code, message, config } = error || {};
     const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none';
-    const msg: string = response?.data?.error?.message ?? '';
+    let msg: string = response?.data?.error?.message ?? '';
+    if (!msg || !msg.length) {
+      const msg2: string = response?.data?.toString?.() ?? '';
+      if (msg2 && msg2.length && msg2.includes('\r\n')) {
+        msg = msg2.split('\r\n')[0];
+      }
+    }
+
     const err: string = error?.toString?.() ?? '';
     let errMessage = '';
 
@@ -206,6 +213,14 @@ const transform: AxiosTransform = {
       }
     } catch (error) {
       throw new Error(error as unknown as string);
+    }
+
+    // OSharp RefreshToken Error
+    if (msg && msg.includes('RefreshToken')) {
+      const userStore = useUserStoreWithOut();
+      userStore.setToken(undefined);
+      userStore.logout(true);
+      return Promise.reject(error);
     }
 
     // OSharp Refresh Token
