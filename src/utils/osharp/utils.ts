@@ -7,7 +7,7 @@ import { Checkbox, Switch, Tag } from 'ant-design-vue';
 import { LabeledValue } from 'ant-design-vue/lib/select';
 import { defHttp } from '../http/axios';
 import { Result } from '/#/axios';
-import { deepCopy } from 'windicss/utils';
+import { cloneDeep } from 'lodash';
 import { ComponentType } from '/@/components/Form/src/types';
 
 //#region Render
@@ -150,14 +150,14 @@ export const defaultModuleInfo: ModuleInfo = {
 //#region PageRequest
 
 export function buildFilterGroup(record: Recordable, filterSchemas: FormSchema[]): FilterGroup {
-  const group: FilterGroup = deepCopy(defFilterGroup);
+  const group: FilterGroup = cloneDeep(defFilterGroup);
   for (const schema of filterSchemas) {
     const field = schema.field;
     if (!Object.prototype.hasOwnProperty.call(record, field)) {
       continue;
     }
     const value = record[field];
-    if (value == undefined) {
+    if (value == undefined || value == null || value == '') {
       continue;
     }
     const props: any = schema.componentProps;

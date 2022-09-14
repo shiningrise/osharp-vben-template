@@ -9,7 +9,6 @@
   "scripts": {
     "commit": "czg",
     "bootstrap": "pnpm install",
-    "start": "npm run dev",
     "serve": "npm run dev",
     "dev": "vite",
     "build": "cross-env NODE_ENV=production vite build && esno ./build/script/postBuild.ts",
@@ -55,6 +54,7 @@
     "guid-typescript": "^1.0.9",
     "intro.js": "^5.1.0",
     "linqts": "^1.14.4",
+    "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
     "moment": "^2.29.1",
