@@ -1,6 +1,8 @@
 <template>
   <BasicModal @register="registerModal" @ok="submit" v-bind="$attrs" :destroy-on-close="true">
-    <BasicForm @register="registerForm" />
+    <BasicForm @register="registerForm">
+      <slot name="formTemplates"></slot>
+    </BasicForm>
   </BasicModal>
 </template>
 

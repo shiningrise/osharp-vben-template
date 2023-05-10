@@ -12,20 +12,32 @@
   <div>
     <AdminTable v-bind="adminTableProps" />
     <AdminFunctionViewDrawer @register="registerFunctionViewDrawer" v-bind="functionViewProps" width="800" />
-    <AdminEditModal @register="registerSetModulesModel" :module="module" :edit-form-props-fn="setModulesFormFn" @on-close="tableMethods.reload()" />
+    <AdminEditModal
+      @register="registerSetModulesModel"
+      :module="module"
+      :edit-form-props-fn="setModulesFormFn"
+      :transport-submit-data="transportSetModulesData"
+      @on-close="tableMethods.reload()"
+    >
+      <template #formTemplates>
+        <a-input placeholder="自定义slot" />
+      </template>
+    </AdminEditModal>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { computed } from 'vue';
+  import { computed, h } from 'vue';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
   import { ActionItem, BasicColumn, BasicTableProps, FormSchema, FormProps, useTable } from '/@/components/Table';
-  import { CheckboxRender, TagRender, defaultModuleInfo, ModuleInfo, transTagToOptions, FilterOperate } from '/@/utils/osharp';
+  import { CheckboxRender, TagRender, defaultModuleInfo, ModuleInfo, transTagToOptions, FilterOperate, EditModalDataWrap } from '/@/utils/osharp';
   import { AdminTable, AdminTableProps, AdminFunctionViewDrawer, AdminFunctionViewDrawerProps, AdminEditModal } from '/@/components/Osharp';
   import { defHttp } from '/@/utils/http/axios';
   import { Result } from '/#/axios';
+  import { Empty } from 'ant-design-vue';
+  import { isArray } from '/@/utils/is';
 
   const module: ModuleInfo = {
     ...defaultModuleInfo,
@@ -116,12 +128,38 @@
   async function setModules(record: Recordable) {
     setModulesModalMethods.setModalProps({ title: `设置角色的权限 - ${record.id}.${record.name}` });
     const result = await defHttp.get<Result>({ url: `/admin/module/readRoleModules?roleId=${record.id}` });
-    const nodes: any[] = result.data;
-    console.log(result);
+    const treeData: any[] = result.data;
+    const data: Recordable = {
+      roleId: record.id as number,
+      moduleTreeData: treeData,
+      moduleIds: [],
+    };
+    const url = '/admin/role/setModules';
+    setModulesModalMethods.openModal<EditModalDataWrap>(true, { submitUrl: url, record: data });
   }
 
   function setModulesFormFn(p: FormProps): FormProps {
-    p.schemas = [{ label: '编号', field: 'roleId', component: 'Input', dynamicDisabled: true }];
+    p.schemas = [
+      { label: '编号', field: 'roleId', component: 'InputNumber', dynamicDisabled: true },
+      {
+        label: '模块',
+        field: 'moduleIds',
+        component: 'ApiTree',
+        render: ({ model, field }) => {
+          console.log(model, field);
+          return h(Empty);
+        },
+      },
+    ];
+
+    return p;
+  }
+
+  function transportSetModulesData(p: Recordable): Recordable {
+    console.log('transportSetModulesData', p);
+    if (isArray(p) && p.length > 0) {
+      return p[0];
+    }
     return p;
   }
 
