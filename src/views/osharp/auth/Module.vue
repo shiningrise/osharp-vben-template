@@ -10,7 +10,7 @@
 
 <template>
   <div>
-    <AdminTable @register="registerTable" v-bind="tableProps">
+    <AdminTable @register="registerTable" v-bind="adminTableProps">
       <template #appandToolbar>
         <a-button type="primary" @click="expandOrCollapseAll">展开/收缩</a-button>
       </template>
@@ -53,7 +53,7 @@
     { label: '模块代码', field: 'code', component: 'Input', componentProps: { operate: FilterOperate.Contains }, colProps: { span: 12 } },
   ];
 
-  const tableProps: AdminTableProps = {
+  const adminTableProps: AdminTableProps = {
     module: module,
     tablePropsFn: tablePropsFn,
     tableActionsFn: tableActionsFn,

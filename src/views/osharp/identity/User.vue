@@ -10,7 +10,7 @@
 
 <template>
   <div>
-    <AdminTable @register="registerTable" v-bind="tableProps" />
+    <AdminTable @register="registerTable" v-bind="adminTableProps" />
     <AdminFunctionViewDrawer @register="registerFunctionViewDrawer" v-bind="functionViewProps" width="800" />
     <AdminEditModal
       @register="registerSetRolesModal"
@@ -87,7 +87,7 @@
     { label: '创建时间', field: 'createdTime', component: 'DatePicker', componentProps: { operate: FilterOperate.Equal }, colProps: { span: 8 } },
   ];
 
-  const tableProps: AdminTableProps = {
+  const adminTableProps: AdminTableProps = {
     module: module,
     tablePropsFn: tablePropsFn,
     tableActionsFn: tableActionsFn,

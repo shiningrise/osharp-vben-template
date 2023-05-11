@@ -18,12 +18,13 @@ import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate, instanceOfResponse, instanceOfResult } from './helper';
 import { useUserStoreWithOut } from '/@/store/modules/user';
 import { AxiosRetry } from '/@/utils/http/axios/axiosRetry';
+import axios from 'axios';
 import { PageEnum } from '/@/enums/pageEnum';
 import { router } from '/@/router';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
-const { createMessage, createErrorModal } = useMessage();
+const { createMessage, createErrorModal, createSuccessModal } = useMessage();
 
 /**
  * @description: 数据处理，方便区分多种处理方式
@@ -98,7 +99,7 @@ const transform: AxiosTransform = {
     }
     msg = content;
 
-    // errorMessageMode=‘modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
+    // errorMessageMode='modal'的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
     // errorMessageMode='none' 一般是调用时明确表示不希望自动弹出错误提示
     if (options.errorMessageMode === 'modal') {
       createErrorModal({ title: t('sys.api.errorTip'), content: msg });
@@ -117,7 +118,7 @@ const transform: AxiosTransform = {
       config.url = `${urlPrefix}${config.url}`;
     }
 
-    if (apiUrl && isString(apiUrl)) {
+    if (apiUrl && isString(apiUrl) && config.url?.startsWith(apiUrl + '/') == false) {
       config.url = `${apiUrl}${config.url}`;
     }
     const params = config.params || {};
@@ -135,7 +136,11 @@ const transform: AxiosTransform = {
     } else {
       if (!isString(params)) {
         formatDate && formatRequestDate(params);
-        if (Reflect.has(config, 'data') && config.data && (Object.keys(config.data).length > 0 || config.data instanceof FormData)) {
+        if (
+          Reflect.has(config, 'data') &&
+          config.data &&
+          (Object.keys(config.data).length > 0 || config.data instanceof FormData)
+        ) {
           config.data = data;
           config.params = params;
         } else {
@@ -184,9 +189,20 @@ const transform: AxiosTransform = {
     errorLogStore.addAjaxErrorInfo(error);
     const { response, code, message, config } = error || {};
     const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none';
-    const msg: string = response?.data?.error?.message ?? '';
+    let msg: string = response?.data?.error?.message ?? '';
+    if (!msg || !msg.length) {
+      const msg2: string = response?.data?.toString?.() ?? '';
+      if (msg2 && msg2.length && msg2.includes('\r\n')) {
+        msg = msg2.split('\r\n')[0];
+      }
+    }
+
     const err: string = error?.toString?.() ?? '';
     let errMessage = '';
+
+    if (axios.isCancel(error)) {
+      return Promise.reject(error);
+    }
 
     try {
       if (code === 'ECONNABORTED' && message.indexOf('timeout') !== -1) {
@@ -208,6 +224,14 @@ const transform: AxiosTransform = {
       throw new Error(error as unknown as string);
     }
 
+    // OSharp RefreshToken Error
+    if (msg && msg.includes('RefreshToken')) {
+      const userStore = useUserStoreWithOut();
+      userStore.setToken(undefined);
+      userStore.logout(true);
+      return Promise.reject(error);
+    }
+
     // OSharp Refresh Token
     if (response?.status === 401) {
       const userStore = useUserStoreWithOut();
@@ -220,7 +244,6 @@ const transform: AxiosTransform = {
           try {
             transform.isTokenRefreshing = true;
             await userStore.refreshTokenAction(refreshToken);
-            config.baseURL = '';
             requests.forEach((cb) => cb());
             requests = [];
             const scheme = config.authenticationScheme;
@@ -235,7 +258,6 @@ const transform: AxiosTransform = {
         } else {
           return new Promise((resolve) => {
             requests.push(() => {
-              config.baseURL = '';
               const scheme = config.authenticationScheme;
               // @ts-ignore
               const newConfig = transform.requestInterceptors(config, {

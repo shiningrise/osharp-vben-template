@@ -84,10 +84,11 @@ export type SizeType = 'default' | 'middle' | 'small' | 'large';
 
 export interface TableActionType {
   reload: (opt?: FetchParams) => Promise<void>;
+  setSelectedRows: (rows: Recordable[]) => void;
   getSelectRows: <T = Recordable>() => T[];
   clearSelectedRowKeys: () => void;
   expandAll: () => void;
-  expandRows: (keys: string[]) => void;
+  expandRows: (keys: string[] | number[]) => void;
   collapseAll: () => void;
   scrollTo: (pos: string) => void; // pos: id | "top" | "bottom"
   getSelectRowKeys: () => string[];
@@ -96,7 +97,7 @@ export interface TableActionType {
   setTableData: <T = Recordable>(values: T[]) => void;
   updateTableDataRecord: (rowKey: string | number, record: Recordable) => Recordable | void;
   deleteTableDataRecord: (rowKey: string | number | string[] | number[]) => void;
-  insertTableDataRecord: (record: Recordable, index?: number) => Recordable | void;
+  insertTableDataRecord: (record: Recordable | Recordable[], index?: number) => Recordable[] | void;
   findTableDataRecord: (rowKey: string | number) => Recordable | void;
   getColumns: (opt?: GetColumnsParams) => BasicColumn[];
   setColumns: (columns: BasicColumn[] | string[]) => void;
@@ -115,6 +116,7 @@ export interface TableActionType {
   setShowPagination: (show: boolean) => Promise<void>;
   getShowPagination: () => boolean;
   setCacheColumnsByField?: (dataIndex: string | undefined, value: BasicColumn) => void;
+  setCacheColumns?: (columns: BasicColumn[]) => void;
 }
 
 export interface FetchSetting {
@@ -133,6 +135,7 @@ export interface TableSetting {
   size?: boolean;
   setting?: boolean;
   fullScreen?: boolean;
+  searchToggle?: boolean;
 }
 
 export interface BasicTableProps<T = any> {
@@ -309,7 +312,7 @@ export interface BasicTableProps<T = any> {
    * you need to add style .ant-table td { white-space: nowrap; }.
    * @type object
    */
-  scroll?: { x?: number | true; y?: number };
+  scroll?: { x?: number | string | true; y?: number | string };
 
   /**
    * Whether to show table header
@@ -373,12 +376,7 @@ export interface BasicTableProps<T = any> {
    *
    * The cell will not submit data while callback return false
    */
-  beforeEditSubmit?: (data: {
-    record: Recordable;
-    index: number;
-    key: string | number;
-    value: any;
-  }) => Promise<any>;
+  beforeEditSubmit?: (data: { record: Recordable; index: number; key: string | number; value: any }) => Promise<any>;
 
   /**
    * Callback executed when pagination, filters or sorter is changed
@@ -406,10 +404,7 @@ export interface BasicTableProps<T = any> {
   onColumnsChange?: (data: ColumnChangeParam[]) => void;
 }
 
-export type CellFormat =
-  | string
-  | ((text: string, record: Recordable, index: number) => string | number)
-  | Map<string | number, any>;
+export type CellFormat = string | ((text: string, record: Recordable, index: number) => string | number) | Map<string | number, any>;
 
 // @ts-ignore
 export interface BasicColumn extends ColumnProps<Recordable> {
@@ -417,9 +412,7 @@ export interface BasicColumn extends ColumnProps<Recordable> {
   filters?: {
     text: string;
     value: string;
-    children?:
-      | unknown[]
-      | (((props: Record<string, unknown>) => unknown[]) & (() => unknown[]) & (() => unknown[]));
+    children?: unknown[] | (((props: Record<string, unknown>) => unknown[]) & (() => unknown[]) & (() => unknown[]));
   }[];
 
   //
@@ -441,14 +434,7 @@ export interface BasicColumn extends ColumnProps<Recordable> {
   editRow?: boolean;
   editable?: boolean;
   editComponent?: ComponentType;
-  editComponentProps?:
-    | ((opt: {
-        text: string | number | boolean | Recordable;
-        record: Recordable;
-        column: BasicColumn;
-        index: number;
-      }) => Recordable)
-    | Recordable;
+  editComponentProps?: ((opt: { text: string | number | boolean | Recordable; record: Recordable; column: BasicColumn; index: number }) => Recordable) | Recordable;
   editRule?: boolean | ((text: string, record: Recordable) => Promise<string>);
   editValueMap?: (value: any) => string;
   onEditRow?: () => void;
@@ -457,12 +443,7 @@ export interface BasicColumn extends ColumnProps<Recordable> {
   // 业务控制是否显示
   ifShow?: boolean | ((column: BasicColumn) => boolean);
   // 自定义修改后显示的内容
-  editRender?: (opt: {
-    text: string | number | boolean | Recordable;
-    record: Recordable;
-    column: BasicColumn;
-    index: number;
-  }) => VNodeChild | JSX.Element;
+  editRender?: (opt: { text: string | number | boolean | Recordable; record: Recordable; column: BasicColumn; index: number }) => VNodeChild | JSX.Element;
   // 动态 Disabled
   editDynamicDisabled?: boolean | ((record: Recordable) => boolean);
 }

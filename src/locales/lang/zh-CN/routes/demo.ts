@@ -29,10 +29,6 @@ export default {
     drawer: '抽屉扩展',
     desc: '详情组件',
 
-    lazy: '懒加载组件',
-    lazyBasic: '基础示例',
-    lazyTransition: '动画效果',
-
     verify: '验证组件',
     verifyDrag: '拖拽校验',
     verifyRotate: '图片还原',
@@ -190,5 +186,6 @@ export default {
     editRowTable: '可编辑行',
     authColumn: '权限列',
     resizeParentHeightTable: '继承父元素高度',
+    vxeTable: 'VxeTable',
   },
 };

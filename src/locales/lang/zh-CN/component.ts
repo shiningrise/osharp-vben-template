@@ -67,9 +67,9 @@ export default {
     settingFixedLeft: '固定到左侧',
     settingFixedRight: '固定到右侧',
     settingFullScreen: '全屏',
-
+    settingHideSearchForm: '禁用搜索栏',
+    settingShowSearchForm: '启用搜索栏',
     index: '序号',
-
     total: '共 {total} 条数据',
   },
   time: {

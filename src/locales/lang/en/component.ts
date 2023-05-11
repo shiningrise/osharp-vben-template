@@ -65,6 +65,8 @@ export default {
     settingFixedLeft: 'Fixed Left',
     settingFixedRight: 'Fixed Right',
     settingFullScreen: 'Full Screen',
+    settingHideSearchForm: 'Disable Search Form',
+    settingShowSearchForm: 'Active Search Form',
     index: 'Index',
     total: 'total of {total}',
   },
