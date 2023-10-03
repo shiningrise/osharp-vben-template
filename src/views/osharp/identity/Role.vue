@@ -18,11 +18,7 @@
       :edit-form-props-fn="setModulesFormFn"
       :transport-submit-data="transportSetModulesData"
       @on-close="tableMethods.reload()"
-    >
-      <template #formTemplates>
-        <a-input placeholder="自定义slot" />
-      </template>
-    </AdminEditModal>
+    />
   </div>
 </template>
 
@@ -127,11 +123,11 @@
 
   async function setModules(record: Recordable) {
     setModulesModalMethods.setModalProps({ title: `设置角色的权限 - ${record.id}.${record.name}` });
-    const result = await defHttp.get<Result>({ url: `/admin/module/readRoleModules?roleId=${record.id}` });
-    const treeData: any[] = result.data;
+    //const result = await defHttp.get<Result>({ url: `/admin/module/readRoleModules?roleId=${record.id}` });
+    //const treeData: any[] = result.data;
     const data: Recordable = {
       roleId: record.id as number,
-      moduleTreeData: treeData,
+      //moduleTreeData: treeData,
       moduleIds: [],
     };
     const url = '/admin/role/setModules';
@@ -141,18 +137,53 @@
   function setModulesFormFn(p: FormProps): FormProps {
     p.schemas = [
       { label: '编号', field: 'roleId', component: 'InputNumber', dynamicDisabled: true },
+      { label: '模块数据', field: 'moduleTreeData', component: 'Input', ifShow: false },
       {
         label: '模块',
         field: 'moduleIds',
+        colProps: { span: 24 },
         component: 'ApiTree',
-        render: ({ model, field }) => {
-          console.log(model, field);
-          return h(Empty);
+        componentProps: ({ formModel }) => {
+          console.log(formModel);
+          if (!formModel.roleId) {
+            return {};
+          }
+          return {
+            api: roleModulesDataApi,
+            params: { roleId: formModel.roleId },
+            afterFetch: (v) => {
+              v = afterRoleModulesDataFetch(v);
+              return v;
+            },
+            resultField: 'key',
+          };
         },
       },
     ];
-
     return p;
+  }
+
+  function afterRoleModulesDataFetch(v: any[]) {
+    for (const item of v) {
+      item.title = item.name;
+      item.key = item.id;
+      item.value = item.id;
+      item.disabled = item.isSystem;
+      if (item.children && item.children.length > 0) {
+        afterRoleModulesDataFetch(item.children);
+      }
+    }
+    return v;
+  }
+
+  async function roleModulesDataApi(param) {
+    console.log('roleModulesDataApi', param);
+    if (!param.roleId) {
+      return [];
+    }
+    const result = await defHttp.get<Result>({ url: `/admin/module/readRoleModules?roleId=${param.roleId}` });
+    const treeData: any[] = result.data;
+    return treeData;
   }
 
   function transportSetModulesData(p: Recordable): Recordable {
