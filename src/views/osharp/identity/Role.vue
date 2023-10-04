@@ -36,8 +36,8 @@
   import { AdminTable, AdminTableProps, AdminFunctionViewDrawer, AdminFunctionViewDrawerProps, AdminEditModal } from '/@/components/Osharp';
   import { defHttp } from '/@/utils/http/axios';
   import { Result } from '/#/axios';
-  import { Empty } from 'ant-design-vue';
   import { isArray } from '/@/utils/is';
+  import { Recordable } from '/@/types';
 
   const module: ModuleInfo = {
     ...defaultModuleInfo,
@@ -127,28 +127,64 @@
 
   async function setModules(record: Recordable) {
     setModulesModalMethods.setModalProps({ title: `设置角色的权限 - ${record.id}.${record.name}` });
-    const result = await defHttp.get<Result>({ url: `/admin/module/readRoleModules?roleId=${record.id}` });
-    const treeData: any[] = result.data;
     const data: Recordable = {
-      roleId: record.id as number,
-      moduleTreeData: treeData,
+      roleId: record.id,
       moduleIds: [],
     };
     const url = '/admin/role/setModules';
     setModulesModalMethods.openModal<EditModalDataWrap>(true, { submitUrl: url, record: data });
   }
 
+  async function readRoleModuleApi(params: any) {
+    if (!params || !params.roleId) {
+      return undefined;
+    }
+    const url = `/admin/module/readRoleModules?roleId=${params.roleId}`;
+    const result = await defHttp.get<Result>({ url: url });
+    const treeData: any[] = result.data;
+    return treeData;
+  }
+
+  function getTreeDataCheckIds(treeData: any[]): string[] {
+    const ids: string[] = [];
+    treeData.forEach((item) => {
+      if (item.isChecked) {
+        ids.push(item.id);
+      }
+      if (item.children && item.children.length > 0) {
+        ids.push(...getTreeDataCheckIds(item.children));
+      }
+    });
+    return ids;
+  }
+
   function setModulesFormFn(p: FormProps): FormProps {
     p.schemas = [
-      { label: '编号', field: 'roleId', component: 'InputNumber', dynamicDisabled: true },
+      { label: '编号', field: 'roleId', colProps: { span: 24 }, component: 'InputNumber', dynamicDisabled: true },
       {
         label: '模块',
         field: 'moduleIds',
+        colProps: { span: 24 },
         component: 'ApiTree',
-        render: ({ model, field }) => {
-          console.log(model, field);
-          return h(Empty);
-        },
+        componentProps: ({ formModel }) => ({
+          api: readRoleModuleApi,
+          params: { roleId: formModel.roleId },
+          checkable: true,
+          autoExpandParent: true,
+          defaultExpandAll: true,
+          fieldNames: { title: 'name', key: 'id', children: 'children' },
+          checkedKeys: formModel.moduleIds,
+          afterFetch: (data) => {
+            if (!data || data.length === 0) {
+              return data;
+            }
+            formModel.moduleIds = getTreeDataCheckIds(data);
+            return data;
+          },
+          onCheck: (checkedKeys) => {
+            formModel.moduleIds = checkedKeys;
+          },
+        }),
       },
     ];
 
@@ -156,7 +192,6 @@
   }
 
   function transportSetModulesData(p: Recordable): Recordable {
-    console.log('transportSetModulesData', p);
     if (isArray(p) && p.length > 0) {
       return p[0];
     }

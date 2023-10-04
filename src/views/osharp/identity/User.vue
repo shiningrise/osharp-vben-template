@@ -147,7 +147,7 @@
   }
   // #endregion
 
-  // #region SetRoles
+  // #region 设置用户的角色
 
   const [registerSetRolesModal, setRolesModalMethods] = useModal();
 
@@ -187,7 +187,7 @@
           });
         },
       },
-      { label: '', field: 'roleNodes', component: 'Input', show: false },
+      { label: '', field: 'roleNodes', component: 'Render', show: false },
     ];
     return p;
   }
