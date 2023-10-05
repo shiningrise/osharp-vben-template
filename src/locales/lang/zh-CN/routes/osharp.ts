@@ -16,6 +16,7 @@ export default {
     user: '用户管理',
     role: '角色管理',
     userRole: '用户角色管理',
+    loginLog: '登录日志管理',
   },
   auth: {
     auth: '权限授权',

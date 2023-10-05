@@ -55,6 +55,15 @@ const osharp: AppRouteModule = {
             acl: ['Root.Admin.Identity.UserRole'],
           },
         },
+        {
+          path: 'login-log',
+          name: 'LoginLog',
+          component: () => import('/@/views/osharp/identity/LoginLog.vue'),
+          meta: {
+            title: t('routes.osharp.identity.loginLog'),
+            acl: ['Root.Admin.Identity.LoginLog'],
+          },
+        },
       ],
     },
     {

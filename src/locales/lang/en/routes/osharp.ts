@@ -16,6 +16,7 @@ export default {
     user: 'User',
     role: 'Role',
     userRole: 'UserRole',
+    loginLog: 'LoginLog',
   },
   auth: {
     auth: 'Auth',

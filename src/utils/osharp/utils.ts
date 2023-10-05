@@ -152,7 +152,7 @@ export const defaultModuleInfo: ModuleInfo = {
 export function buildFilterGroup(record: Recordable, filterSchemas: FormSchema[]): FilterGroup {
   const group: FilterGroup = cloneDeep(defFilterGroup);
   for (const schema of filterSchemas) {
-    const field = schema.field;
+    let field = schema.field;
     if (!Object.prototype.hasOwnProperty.call(record, field)) {
       continue;
     }
@@ -162,6 +162,9 @@ export function buildFilterGroup(record: Recordable, filterSchemas: FormSchema[]
     }
     const props: any = schema.componentProps;
     const operate = (props?.operate as FilterOperate) || componentTypeToFilterOperation(schema.component);
+    if (schema.valueField) {
+      field = schema.valueField || field;
+    }
     group.rules.push({ field: field, value: value, operate: operate } as FilterRule);
   }
   return group;
@@ -176,10 +179,6 @@ export function componentTypeToFilterOperation(type: ComponentType): FilterOpera
     default:
       return FilterOperate.Equal;
   }
-}
-
-export function componentTypeToFilterOperations(type: ComponentType): FilterOperate[] {
-  return [];
 }
 
 export function buildPageRequest(options: PageRequestOptions): PageRequest {
