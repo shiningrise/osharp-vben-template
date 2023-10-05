@@ -105,7 +105,7 @@
   }
 
   function tableActionsFn(items: ActionItem[], record: Recordable) {
-    items[1].ifShow = () => record.deletable && record.id != 1;
+    items[1].ifShow = () => record.deletable && !record.isSystem;
     return items;
   }
 

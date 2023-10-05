@@ -31,11 +31,24 @@
   const authPath = computed(() => `Root.${module.areaName}.${module.moduleName}.${module.entityName}`).value;
   const { createMessage } = useMessage();
 
-  const columns: BasicColumn[] = [{ title: '编号', dataIndex: 'id', width: 50 }];
+  const columns: BasicColumn[] = [
+    { title: '编号', dataIndex: 'id', width: 50 },
+    { title: '用户', dataIndex: 'userName', width: 200 },
+    { title: '角色', dataIndex: 'roleName', width: 200 },
+    { title: '是否锁定', dataIndex: 'isLocked', sorter: true, width: 100, customRender: ({ text }) => CheckboxRender(text) },
+  ];
 
-  const editSchemas: FormSchema[] = [{ label: '编号', field: 'id', component: 'Input', render: ({ values }) => values?.id || '自动生成' }];
+  const editSchemas: FormSchema[] = [
+    { label: '编号', field: 'id', component: 'Input', render: ({ values }) => values?.id || '自动生成' },
+    { label: '用户', field: 'userId', component: 'Input', show: false },
+    { label: '角色', field: 'roleId', component: 'Input', show: false },
+    { label: '是否锁定', field: 'isLocked', component: 'Switch', colProps: { span: 12 } },
+  ];
 
-  const filterSchemas: FormSchema[] = [];
+  const filterSchemas: FormSchema[] = [
+    { field: 'userName', label: '用户', valueField: 'User.UserName', component: 'Input', colProps: { span: 8 } },
+    { field: 'roleName', label: '角色', valueField: 'Role.Name', component: 'Input', colProps: { span: 8 } },
+  ];
 
   const adminTableProps: AdminTableProps = {
     module: module,
@@ -44,7 +57,7 @@
     tableDropDownActionsFn: tableDropDownActionsFn,
     filterFormPropsFn: filterFormPropsFn,
     editFormPropsFn: editFormPropsFn,
-    editModalFn: (m, r) => m.setModalProps({ title: `更新${module.entityDisplay} - ${r.name}` }),
+    editModalFn: (m, r) => m.setModalProps({ title: `更新${module.entityDisplay} - ${r.userName}[${r.roleName}]` }),
   };
 
   function tablePropsFn(p: BasicTableProps): BasicTableProps {
