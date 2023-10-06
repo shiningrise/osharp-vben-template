@@ -34,10 +34,8 @@
   import { ActionItem, BasicColumn, BasicTableProps, FormSchema, FormProps, useTable } from '/@/components/Table';
   import { CheckboxRender, TagRender, defaultModuleInfo, ModuleInfo, transTagToOptions, FilterOperate, EditModalDataWrap } from '/@/utils/osharp';
   import { AdminTable, AdminTableProps, AdminFunctionViewDrawer, AdminFunctionViewDrawerProps, AdminEditModal } from '/@/components/Osharp';
-  import { defHttp } from '/@/utils/http/axios';
-  import { Result } from '/#/axios';
+  import { readRoleModulesApi } from '/@/api/osharp';
   import { isArray } from '/@/utils/is';
-  import { Recordable } from '/@/types';
 
   const module: ModuleInfo = {
     ...defaultModuleInfo,
@@ -135,16 +133,6 @@
     setModulesModalMethods.openModal<EditModalDataWrap>(true, { submitUrl: url, record: data });
   }
 
-  async function readRoleModuleApi(params: any) {
-    if (!params || !params.roleId) {
-      return undefined;
-    }
-    const url = `/admin/module/readRoleModules?roleId=${params.roleId}`;
-    const result = await defHttp.get<Result>({ url: url });
-    const treeData: any[] = result.data;
-    return treeData;
-  }
-
   function getTreeDataCheckIds(treeData: any[]): string[] {
     const ids: string[] = [];
     treeData.forEach((item) => {
@@ -167,7 +155,7 @@
         colProps: { span: 24 },
         component: 'ApiTree',
         componentProps: ({ formModel }) => ({
-          api: readRoleModuleApi,
+          api: readRoleModulesApi,
           params: { roleId: formModel.roleId },
           checkable: true,
           autoExpandParent: true,
