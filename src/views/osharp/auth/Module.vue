@@ -12,7 +12,7 @@
   <div>
     <AdminTable @register="registerTable" v-bind="adminTableProps">
       <template #appandToolbar>
-        <a-button type="primary" @click="expandOrCollapseAll">展开/收缩</a-button>
+        <a-button type="primary" @click="expandOrCollapseAll">{{ expandButtonText }}</a-button>
       </template>
     </AdminTable>
     <AdminFunctionViewDrawer @register="registerFunctionViewDrawer" v-bind="functionViewProps" width="800" />
@@ -39,10 +39,10 @@
   const { createMessage } = useMessage();
   const [registerTable, tableMethods] = useTable();
   const isExpanded = ref(false);
+  const expandButtonText = ref('展开');
 
   const columns: BasicColumn[] = [
-    { title: '编号', dataIndex: 'id', width: 200, align: 'left' },
-    { title: '模块名称', dataIndex: 'name', align: 'left', width: 150 },
+    { title: '模块', dataIndex: 'id', width: 200, align: 'left', customRender: ({ text, record }) => `${text}. ${record.name}` },
     { title: '模块描述', dataIndex: 'remark', align: 'left', width: 150 },
     { title: '模块代码', dataIndex: 'code', align: 'left', width: 150 },
     { title: '排序码', dataIndex: 'orderCode', width: 150 },
@@ -104,9 +104,11 @@
     if (unref(isExpanded)) {
       tableMethods.collapseAll();
       isExpanded.value = false;
+      expandButtonText.value = '展开';
     } else {
       tableMethods.expandAll();
       isExpanded.value = true;
+      expandButtonText.value = '折叠';
     }
   }
 
