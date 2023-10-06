@@ -119,6 +119,16 @@ const osharp: AppRouteModule = {
             acl: ['Root.Admin.Auth.EntityInfo'],
           },
         },
+        {
+          path: 'role-entity',
+          name: 'RoleEntity',
+          component: () => import('/@/views/osharp/auth/RoleEntity.vue'),
+          meta: {
+            title: t('routes.osharp.auth.roleEntity'),
+            icon: 'ant-design:database-outlined',
+            acl: ['Root.Admin.Auth.RoleEntity'],
+          },
+        },
       ],
     },
     {

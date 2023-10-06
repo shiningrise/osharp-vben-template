@@ -23,6 +23,7 @@ export default {
     module: '模块管理',
     function: '功能管理',
     entityInfo: '实体管理',
+    roleEntity: '数据权限管理',
   },
   infos: {
     infos: '信息',

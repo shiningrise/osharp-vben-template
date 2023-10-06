@@ -23,6 +23,7 @@ export default {
     module: 'Module',
     function: 'Function',
     entityInfo: 'EntityInfo',
+    roleEntity: 'DataAuth',
   },
   infos: {
     infos: 'Infos',
