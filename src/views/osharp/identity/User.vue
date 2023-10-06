@@ -55,7 +55,7 @@
     { title: '手机确认', dataIndex: 'phoneNumberConfirmed', sorter: true, width: 100, customRender: ({ text }) => CheckboxRender(text) },
     { title: '用户头像', dataIndex: 'headImg', align: 'left', width: 150 },
     { title: '用户角色', dataIndex: 'roles', align: 'left', width: 150, customRender: ({ text }) => expandAndToString(text) },
-    { title: '锁定时间', dataIndex: 'lockoutEnd', sorter: true, width: 150, defaultHidden: true },
+    { title: '锁定时间', dataIndex: 'lockoutEnd', sorter: true, width: 150, defaultHidden: true, format: 'date|YYYY/MM/DD HH:mm' },
     { title: '是否登录锁', dataIndex: 'lockoutEnabled', sorter: true, width: 100, defaultHidden: true, customRender: ({ text }) => CheckboxRender(text) },
     { title: '登录失败次数', dataIndex: 'accessFailedCount', sorter: true, width: 100, defaultHidden: true },
     { title: '是否锁定', dataIndex: 'isLocked', sorter: true, width: 100, customRender: ({ text }) => CheckboxRender(text) },
