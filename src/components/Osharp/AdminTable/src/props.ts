@@ -36,6 +36,11 @@ export const adminTableProps = {
   tableDataFn: {
     type: Function as PropType<(data: PageData<any>) => PageData<any>>,
   },
+  /** 是否显示展开按钮 */
+  showExpand: {
+    type: Boolean as PropType<boolean>,
+    default: false,
+  },
 };
 
 export const adminEditModalProps = {

@@ -2,6 +2,9 @@
   <div ref="wrapRef">
     <slot name="beforeTable"></slot>
     <BasicTable @register="registerTable" v-bind="$attrs">
+      <template #expandedRowRender="{ record }" v-if="showExpand">
+        <slot name="expandedRowRender" :record="record"></slot>
+      </template>
       <template #toolbar>
         <Authority :value="`${authPath}.Create`">
           <a-button type="primary" @click="createRow">新建</a-button>
