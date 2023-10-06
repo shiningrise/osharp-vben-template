@@ -27,10 +27,11 @@
 
   const [registerTable, tableMethods] = useTable({
     columns: [
-      { title: '功能名称', dataIndex: 'name', sorter: true, align: 'left' },
-      { title: '功能类型', dataIndex: 'accessType', sorter: true, width: 100, customRender: ({ text }) => TagRender(text, accessTypeTags) },
+      { title: '名称', dataIndex: 'name', sorter: true, align: 'left' },
+      { title: '类型', dataIndex: 'accessType', sorter: true, width: 100, customRender: ({ text }) => TagRender(text, accessTypeTags) },
       { title: '区域', dataIndex: 'area', sorter: true, align: 'left', width: 80 },
-      { title: '控制器', dataIndex: 'controller', sorter: true, align: 'left', width: 100 },
+      { title: '控制器', dataIndex: 'controller', sorter: true, align: 'left', width: 120 },
+      { title: '功能', dataIndex: 'action', sorter: true, align: 'left', width: 150 },
     ],
     title: '功能列表',
     clickToRowSelect: false,
