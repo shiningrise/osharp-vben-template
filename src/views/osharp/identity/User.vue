@@ -32,7 +32,7 @@
   import { ActionItem, BasicColumn, BasicTableProps, FormSchema, FormProps, useTable } from '/@/components/Table';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { defHttp } from '/@/utils/http/axios';
-  import { CheckboxRender, TagRender, defaultModuleInfo, ModuleInfo, transTagToOptions, EditModalDataWrap, FilterOperate } from '/@/utils/osharp';
+  import { CheckboxRender, TagRender, defaultModuleInfo, ModuleInfo, transTagToOptions, EditModalDataWrap, FilterOperate, expandAndToString } from '/@/utils/osharp';
 
   const module: ModuleInfo = {
     ...defaultModuleInfo,
@@ -52,8 +52,9 @@
     { title: '邮箱', dataIndex: 'email', align: 'left', sorter: true, width: 150 },
     { title: '邮箱确认', dataIndex: 'emailConfirmed', sorter: true, width: 100, customRender: ({ text }) => CheckboxRender(text) },
     { title: '手机号', dataIndex: 'phoneNumber', align: 'left', sorter: true, width: 150 },
-    { title: '手机号确认', dataIndex: 'phoneNumberConfirmed', sorter: true, width: 100, customRender: ({ text }) => CheckboxRender(text) },
+    { title: '手机确认', dataIndex: 'phoneNumberConfirmed', sorter: true, width: 100, customRender: ({ text }) => CheckboxRender(text) },
     { title: '用户头像', dataIndex: 'headImg', align: 'left', width: 150 },
+    { title: '用户角色', dataIndex: 'roles', align: 'left', width: 150, customRender: ({ text }) => expandAndToString(text) },
     { title: '锁定时间', dataIndex: 'lockoutEnd', sorter: true, width: 150, defaultHidden: true },
     { title: '是否登录锁', dataIndex: 'lockoutEnabled', sorter: true, width: 100, defaultHidden: true, customRender: ({ text }) => CheckboxRender(text) },
     { title: '登录失败次数', dataIndex: 'accessFailedCount', sorter: true, width: 100, defaultHidden: true },

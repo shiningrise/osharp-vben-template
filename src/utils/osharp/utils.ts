@@ -65,7 +65,7 @@ export function expandAndToString(array: Array<any>, separator = ',') {
   array.forEach((item) => {
     result = result + item.toString() + separator;
   });
-  return result.substr(0, result.length - separator.length);
+  return result.substring(0, result.length - separator.length);
 }
 /**
  * 提供首尾字符串截取中间的字符串
