@@ -58,11 +58,12 @@
     p.title = `${module.entityDisplay}管理`;
     p.columns = columns;
     p.useSearchForm = true;
-    p.rowSelection = undefined;
+    p.showIndexColumn = true;
     return p;
   }
 
   function tableActionsFn(items: ActionItem[], record: Recordable) {
+    items[1].ifShow = () => true;
     return items;
   }
 

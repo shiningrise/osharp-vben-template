@@ -1,3 +1,14 @@
+// -----------------------------------------------------------------------
+//  <once-generated>
+//     这个文件只生成一次，再次生成不会被覆盖。
+//  </once-generated>
+//
+//  <copyright file="src/router/routes/modules/osharp.ts" company="LiuliuSoft">
+//      OSHARP.ORG@2021
+//  </copyright>
+//  <site>https://www.osharp.org</site>
+//  <last-editor>郭明锋</last-editor>
+// -----------------------------------------------------------------------
 import type { AppRouteModule } from '/@/router/types';
 import { LAYOUT, getParentLayout } from '/@/router/constant';
 import { t } from '/@/hooks/web/useI18n';
@@ -61,6 +72,7 @@ const osharp: AppRouteModule = {
           component: () => import('/@/views/osharp/identity/LoginLog.vue'),
           meta: {
             title: t('routes.osharp.identity.loginLog'),
+            icon: 'ant-design:login-outlined',
             acl: ['Root.Admin.Identity.LoginLog'],
           },
         },
