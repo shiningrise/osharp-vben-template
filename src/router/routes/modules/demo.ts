@@ -1,14 +1,15 @@
-import type { AppRouteModule } from '/@/router/types';
+import type { AppRouteModule } from '@/router/types';
 
-import { getParentLayout, LAYOUT } from '/@/router/constant';
-import { t } from '/@/hooks/web/useI18n';
+import { getParentLayout, LAYOUT } from '@/router/constant';
+import { t } from '@/hooks/web/useI18n';
+import { ExceptionEnum } from '@/enums/exceptionEnum';
+
 import { RoleEnum } from '/@/enums/roleEnum';
-import { ExceptionEnum } from '/@/enums/exceptionEnum';
+const IFrame = () => import('@/views/sys/iframe/FrameBlank.vue');
+const ExceptionPage = () => import('@/views/sys/exception/Exception.vue');
 
-const ExceptionPage = () => import('/@/views/sys/exception/Exception.vue');
-const IFrame = () => import('/@/views/sys/iframe/FrameBlank.vue');
 
-const comp: AppRouteModule = {
+const demo: AppRouteModule = {
   path: '/demo',
   name: 'Demo',
   component: LAYOUT,
@@ -17,22 +18,634 @@ const comp: AppRouteModule = {
     orderNo: 2000,
     title: t('routes.demo.demo'),
   },
-  children: [
+  children:[
     {
-      path: 'feat',
+      path: '/charts',
+      name: 'Charts',
+      component: LAYOUT,
+      redirect: '/charts/echarts/map',
+      meta: {
+        orderNo: 500,
+        icon: 'ion:bar-chart-outline',
+        title: t('routes.demo.charts.charts'),
+      },
+      children: [
+        {
+          path: 'baiduMap',
+          name: 'BaiduMap',
+          meta: {
+            title: t('routes.demo.charts.baiduMap'),
+          },
+          component: () => import('@/views/demo/charts/map/Baidu.vue'),
+        },
+        {
+          path: 'aMap',
+          name: 'AMap',
+          meta: {
+            title: t('routes.demo.charts.aMap'),
+          },
+          component: () => import('@/views/demo/charts/map/Gaode.vue'),
+        },
+        {
+          path: 'googleMap',
+          name: 'GoogleMap',
+          meta: {
+            title: t('routes.demo.charts.googleMap'),
+          },
+          component: () => import('@/views/demo/charts/map/Google.vue'),
+        },
+    
+        {
+          path: 'echarts',
+          name: 'Echarts',
+          component: getParentLayout('Echarts'),
+          meta: {
+            title: 'Echarts',
+          },
+          redirect: '/charts/echarts/map',
+          children: [
+            {
+              path: 'map',
+              name: 'Map',
+              component: () => import('@/views/demo/charts/Map.vue'),
+              meta: {
+                title: t('routes.demo.charts.map'),
+              },
+            },
+            {
+              path: 'line',
+              name: 'Line',
+              component: () => import('@/views/demo/charts/Line.vue'),
+              meta: {
+                title: t('routes.demo.charts.line'),
+              },
+            },
+            {
+              path: 'pie',
+              name: 'Pie',
+              component: () => import('@/views/demo/charts/Pie.vue'),
+              meta: {
+                title: t('routes.demo.charts.pie'),
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      path: '/comp',
+      name: 'Comp',
+      component: LAYOUT,
+      redirect: '/comp/basic',
+      meta: {
+        orderNo: 30,
+        icon: 'ion:layers-outline',
+        title: t('routes.demo.comp.comp'),
+      },
+    
+      children: [
+        {
+          path: 'basic',
+          name: 'BasicDemo',
+          component: () => import('@/views/demo/comp/button/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.basic'),
+          },
+        },
+    
+        {
+          path: 'form',
+          name: 'FormDemo',
+          redirect: '/comp/form/basic',
+          component: getParentLayout('FormDemo'),
+          meta: {
+            // icon: 'mdi:form-select',
+            title: t('routes.demo.form.form'),
+          },
+          children: [
+            {
+              path: 'basic',
+              name: 'FormBasicDemo',
+              component: () => import('@/views/demo/form/index.vue'),
+              meta: {
+                title: t('routes.demo.form.basic'),
+              },
+            },
+            {
+              path: 'useForm',
+              name: 'UseFormDemo',
+              component: () => import('@/views/demo/form/UseForm.vue'),
+              meta: {
+                title: t('routes.demo.form.useForm'),
+              },
+            },
+            {
+              path: 'refForm',
+              name: 'RefFormDemo',
+              component: () => import('@/views/demo/form/RefForm.vue'),
+              meta: {
+                title: t('routes.demo.form.refForm'),
+              },
+            },
+            {
+              path: 'advancedForm',
+              name: 'AdvancedFormDemo',
+              component: () => import('@/views/demo/form/AdvancedForm.vue'),
+              meta: {
+                title: t('routes.demo.form.advancedForm'),
+              },
+            },
+            {
+              path: 'ruleForm',
+              name: 'RuleFormDemo',
+              component: () => import('@/views/demo/form/RuleForm.vue'),
+              meta: {
+                title: t('routes.demo.form.ruleForm'),
+              },
+            },
+            {
+              path: 'dynamicForm',
+              name: 'DynamicFormDemo',
+              component: () => import('@/views/demo/form/DynamicForm.vue'),
+              meta: {
+                title: t('routes.demo.form.dynamicForm'),
+              },
+            },
+            {
+              path: 'customerForm',
+              name: 'CustomerFormDemo',
+              component: () => import('@/views/demo/form/CustomerForm.vue'),
+              meta: {
+                title: t('routes.demo.form.customerForm'),
+              },
+            },
+            {
+              path: 'appendForm',
+              name: 'appendFormDemo',
+              component: () => import('@/views/demo/form/AppendForm.vue'),
+              meta: {
+                title: t('routes.demo.form.appendForm'),
+              },
+            },
+            {
+              path: 'tabsForm',
+              name: 'tabsFormDemo',
+              component: () => import('@/views/demo/form/TabsForm.vue'),
+              meta: {
+                title: t('routes.demo.form.tabsForm'),
+              },
+            },
+          ],
+        },
+        {
+          path: 'table',
+          name: 'TableDemo',
+          redirect: '/comp/table/basic',
+          component: getParentLayout('TableDemo'),
+          meta: {
+            // icon: 'carbon:table-split',
+            title: t('routes.demo.table.table'),
+          },
+    
+          children: [
+            {
+              path: 'basic',
+              name: 'TableBasicDemo',
+              component: () => import('@/views/demo/table/Basic.vue'),
+              meta: {
+                title: t('routes.demo.table.basic'),
+              },
+            },
+            {
+              path: 'treeTable',
+              name: 'TreeTableDemo',
+              component: () => import('@/views/demo/table/TreeTable.vue'),
+              meta: {
+                title: t('routes.demo.table.treeTable'),
+              },
+            },
+            {
+              path: 'fetchTable',
+              name: 'FetchTableDemo',
+              component: () => import('@/views/demo/table/FetchTable.vue'),
+              meta: {
+                title: t('routes.demo.table.fetchTable'),
+              },
+            },
+            {
+              path: 'fixedColumn',
+              name: 'FixedColumnDemo',
+              component: () => import('@/views/demo/table/FixedColumn.vue'),
+              meta: {
+                title: t('routes.demo.table.fixedColumn'),
+              },
+            },
+            {
+              path: 'customerCell',
+              name: 'CustomerCellDemo',
+              component: () => import('@/views/demo/table/CustomerCell.vue'),
+              meta: {
+                title: t('routes.demo.table.customerCell'),
+              },
+            },
+            {
+              path: 'formTable',
+              name: 'FormTableDemo',
+              component: () => import('@/views/demo/table/FormTable.vue'),
+              meta: {
+                title: t('routes.demo.table.formTable'),
+              },
+            },
+            {
+              path: 'useTable',
+              name: 'UseTableDemo',
+              component: () => import('@/views/demo/table/UseTable.vue'),
+              meta: {
+                title: t('routes.demo.table.useTable'),
+              },
+            },
+            {
+              path: 'refTable',
+              name: 'RefTableDemo',
+              component: () => import('@/views/demo/table/RefTable.vue'),
+              meta: {
+                title: t('routes.demo.table.refTable'),
+              },
+            },
+            {
+              path: 'multipleHeader',
+              name: 'MultipleHeaderDemo',
+              component: () => import('@/views/demo/table/MultipleHeader.vue'),
+              meta: {
+                title: t('routes.demo.table.multipleHeader'),
+              },
+            },
+            {
+              path: 'mergeHeader',
+              name: 'MergeHeaderDemo',
+              component: () => import('@/views/demo/table/MergeHeader.vue'),
+              meta: {
+                title: t('routes.demo.table.mergeHeader'),
+              },
+            },
+            {
+              path: 'expandTable',
+              name: 'ExpandTableDemo',
+              component: () => import('@/views/demo/table/ExpandTable.vue'),
+              meta: {
+                title: t('routes.demo.table.expandTable'),
+              },
+            },
+            {
+              path: 'fixedHeight',
+              name: 'FixedHeightDemo',
+              component: () => import('@/views/demo/table/FixedHeight.vue'),
+              meta: {
+                title: t('routes.demo.table.fixedHeight'),
+              },
+            },
+            {
+              path: 'footerTable',
+              name: 'FooterTableDemo',
+              component: () => import('@/views/demo/table/FooterTable.vue'),
+              meta: {
+                title: t('routes.demo.table.footerTable'),
+              },
+            },
+            {
+              path: 'editCellTable',
+              name: 'EditCellTableDemo',
+              component: () => import('@/views/demo/table/EditCellTable.vue'),
+              meta: {
+                title: t('routes.demo.table.editCellTable'),
+              },
+            },
+            {
+              path: 'editRowTable',
+              name: 'EditRowTableDemo',
+              component: () => import('@/views/demo/table/EditRowTable.vue'),
+              meta: {
+                title: t('routes.demo.table.editRowTable'),
+              },
+            },
+            {
+              path: 'authColumn',
+              name: 'AuthColumnDemo',
+              component: () => import('@/views/demo/table/AuthColumn.vue'),
+              meta: {
+                title: t('routes.demo.table.authColumn'),
+              },
+            },
+            {
+              path: 'resizeParentHeightTable',
+              name: 'ResizeParentHeightTable',
+              component: () => import('@/views/demo/table/ResizeParentHeightTable.vue'),
+              meta: {
+                title: t('routes.demo.table.resizeParentHeightTable'),
+              },
+            },
+            {
+              path: 'vxeTable',
+              name: 'VxeTableDemo',
+              component: () => import('@/views/demo/table/VxeTable.vue'),
+              meta: {
+                title: t('routes.demo.table.vxeTable'),
+              },
+            },
+          ],
+        },
+        {
+          path: 'transition',
+          name: 'transitionDemo',
+          component: () => import('@/views/demo/comp/transition/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.transition'),
+          },
+        },
+        {
+          path: 'cropper',
+          name: 'CropperDemo',
+          component: () => import('@/views/demo/comp/cropper/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.cropperImage'),
+          },
+        },
+    
+        {
+          path: 'timestamp',
+          name: 'TimeDemo',
+          component: () => import('@/views/demo/comp/time/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.time'),
+          },
+        },
+        {
+          path: 'countTo',
+          name: 'CountTo',
+          component: () => import('@/views/demo/comp/count-to/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.countTo'),
+          },
+        },
+        {
+          path: 'tree',
+          name: 'TreeDemo',
+          redirect: '/comp/tree/basic',
+          component: getParentLayout('TreeDemo'),
+          meta: {
+            // icon: 'clarity:tree-view-line',
+            title: t('routes.demo.comp.tree'),
+          },
+          children: [
+            {
+              path: 'basic',
+              name: 'BasicTreeDemo',
+              component: () => import('@/views/demo/tree/index.vue'),
+              meta: {
+                title: t('routes.demo.comp.treeBasic'),
+              },
+            },
+            {
+              path: 'editTree',
+              name: 'EditTreeDemo',
+              component: () => import('@/views/demo/tree/EditTree.vue'),
+              meta: {
+                title: t('routes.demo.comp.editTree'),
+              },
+            },
+            {
+              path: 'actionTree',
+              name: 'ActionTreeDemo',
+              component: () => import('@/views/demo/tree/ActionTree.vue'),
+              meta: {
+                title: t('routes.demo.comp.actionTree'),
+              },
+            },
+          ],
+        },
+        {
+          path: 'editor',
+          name: 'EditorDemo',
+          redirect: '/comp/editor/markdown',
+          component: getParentLayout('EditorDemo'),
+          meta: {
+            // icon: 'carbon:table-split',
+            title: t('routes.demo.editor.editor'),
+          },
+          children: [
+            {
+              path: 'json',
+              component: () => import('@/views/demo/editor/json/index.vue'),
+              name: 'JsonEditorDemo',
+              meta: {
+                title: t('routes.demo.editor.jsonEditor'),
+              },
+            },
+            {
+              path: 'markdown',
+              component: getParentLayout('MarkdownDemo'),
+              name: 'MarkdownDemo',
+              meta: {
+                title: t('routes.demo.editor.markdown'),
+              },
+              redirect: '/comp/editor/markdown/index',
+              children: [
+                {
+                  path: 'index',
+                  name: 'MarkDownBasicDemo',
+                  component: () => import('@/views/demo/editor/markdown/index.vue'),
+                  meta: {
+                    title: t('routes.demo.editor.tinymceBasic'),
+                  },
+                },
+                {
+                  path: 'editor',
+                  name: 'MarkDownFormDemo',
+                  component: () => import('@/views/demo/editor/markdown/Editor.vue'),
+                  meta: {
+                    title: t('routes.demo.editor.tinymceForm'),
+                  },
+                },
+              ],
+            },
+    
+            {
+              path: 'tinymce',
+              component: getParentLayout('TinymceDemo'),
+              name: 'TinymceDemo',
+              meta: {
+                title: t('routes.demo.editor.tinymce'),
+              },
+              redirect: '/comp/editor/tinymce/index',
+              children: [
+                {
+                  path: 'index',
+                  name: 'TinymceBasicDemo',
+                  component: () => import('@/views/demo/editor/tinymce/index.vue'),
+                  meta: {
+                    title: t('routes.demo.editor.tinymceBasic'),
+                  },
+                },
+                {
+                  path: 'editor',
+                  name: 'TinymceFormDemo',
+                  component: () => import('@/views/demo/editor/tinymce/Editor.vue'),
+                  meta: {
+                    title: t('routes.demo.editor.tinymceForm'),
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          path: 'scroll',
+          name: 'ScrollDemo',
+          redirect: '/comp/scroll/basic',
+          component: getParentLayout('ScrollDemo'),
+          meta: {
+            title: t('routes.demo.comp.scroll'),
+          },
+          children: [
+            {
+              path: 'basic',
+              name: 'BasicScrollDemo',
+              component: () => import('@/views/demo/comp/scroll/index.vue'),
+              meta: {
+                title: t('routes.demo.comp.scrollBasic'),
+              },
+            },
+            {
+              path: 'action',
+              name: 'ActionScrollDemo',
+              component: () => import('@/views/demo/comp/scroll/Action.vue'),
+              meta: {
+                title: t('routes.demo.comp.scrollAction'),
+              },
+            },
+            {
+              path: 'virtualScroll',
+              name: 'VirtualScrollDemo',
+              component: () => import('@/views/demo/comp/scroll/VirtualScroll.vue'),
+              meta: {
+                title: t('routes.demo.comp.virtualScroll'),
+              },
+            },
+          ],
+        },
+    
+        {
+          path: 'modal',
+          name: 'ModalDemo',
+          component: () => import('@/views/demo/comp/modal/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.modal'),
+          },
+        },
+        {
+          path: 'drawer',
+          name: 'DrawerDemo',
+          component: () => import('@/views/demo/comp/drawer/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.drawer'),
+          },
+        },
+        {
+          path: 'desc',
+          name: 'DescDemo',
+          component: () => import('@/views/demo/comp/desc/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.desc'),
+          },
+        },
+    
+        {
+          path: 'verify',
+          name: 'VerifyDemo',
+          component: getParentLayout('VerifyDemo'),
+          redirect: '/comp/verify/drag',
+          meta: {
+            title: t('routes.demo.comp.verify'),
+          },
+          children: [
+            {
+              path: 'drag',
+              name: 'VerifyDragDemo',
+              component: () => import('@/views/demo/comp/verify/index.vue'),
+              meta: {
+                title: t('routes.demo.comp.verifyDrag'),
+              },
+            },
+            {
+              path: 'rotate',
+              name: 'VerifyRotateDemo',
+              component: () => import('@/views/demo/comp/verify/Rotate.vue'),
+              meta: {
+                title: t('routes.demo.comp.verifyRotate'),
+              },
+            },
+          ],
+        },
+        //
+    
+        {
+          path: 'qrcode',
+          name: 'QrCodeDemo',
+          component: () => import('@/views/demo/comp/qrcode/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.qrcode'),
+          },
+        },
+        {
+          path: 'strength-meter',
+          name: 'StrengthMeterDemo',
+          component: () => import('@/views/demo/comp/strength-meter/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.strength'),
+          },
+        },
+        {
+          path: 'upload',
+          name: 'UploadDemo',
+          component: () => import('@/views/demo/comp/upload/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.upload'),
+          },
+        },
+        {
+          path: 'loading',
+          name: 'LoadingDemo',
+          component: () => import('@/views/demo/comp/loading/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.loading'),
+          },
+        },
+        {
+          path: 'cardList',
+          name: 'CardListDemo',
+          component: () => import('@/views/demo/comp/card-list/index.vue'),
+          meta: {
+            title: t('routes.demo.comp.cardList'),
+          },
+        },
+      ],
+    },
+    {
+      path: '/feat',
       name: 'FeatDemo',
       component: LAYOUT,
-      redirect: 'feat/icon',
+      redirect: '/feat/icon',
       meta: {
         orderNo: 19,
         icon: 'ion:git-compare-outline',
         title: t('routes.demo.feat.feat'),
       },
+    
       children: [
         {
           path: 'icon',
           name: 'IconDemo',
-          component: () => import('/@/views/demo/feat/icon/index.vue'),
+          component: () => import('@/views/demo/feat/icon/index.vue'),
           meta: {
             title: t('routes.demo.feat.icon'),
           },
@@ -40,7 +653,7 @@ const comp: AppRouteModule = {
         {
           path: 'ws',
           name: 'WebSocket',
-          component: () => import('/@/views/demo/feat/ws/index.vue'),
+          component: () => import('@/views/demo/feat/ws/index.vue'),
           meta: {
             title: t('routes.demo.feat.ws'),
           },
@@ -49,7 +662,7 @@ const comp: AppRouteModule = {
           path: 'request',
           name: 'RequestDemo',
           // @ts-ignore
-          component: () => import('/@/views/demo/feat/request-demo/index.vue'),
+          component: () => import('@/views/demo/feat/request-demo/index.vue'),
           meta: {
             title: t('routes.demo.feat.requestDemo'),
           },
@@ -57,7 +670,7 @@ const comp: AppRouteModule = {
         {
           path: 'session-timeout',
           name: 'SessionTimeout',
-          component: () => import('/@/views/demo/feat/session-timeout/index.vue'),
+          component: () => import('@/views/demo/feat/session-timeout/index.vue'),
           meta: {
             title: t('routes.demo.feat.sessionTimeout'),
           },
@@ -65,7 +678,7 @@ const comp: AppRouteModule = {
         {
           path: 'print',
           name: 'Print',
-          component: () => import('/@/views/demo/feat/print/index.vue'),
+          component: () => import('@/views/demo/feat/print/index.vue'),
           meta: {
             title: t('routes.demo.feat.print'),
           },
@@ -73,7 +686,7 @@ const comp: AppRouteModule = {
         {
           path: 'tabs',
           name: 'TabsDemo',
-          component: () => import('/@/views/demo/feat/tabs/index.vue'),
+          component: () => import('@/views/demo/feat/tabs/index.vue'),
           meta: {
             title: t('routes.demo.feat.tabs'),
             hideChildrenInMenu: true,
@@ -82,13 +695,13 @@ const comp: AppRouteModule = {
             {
               path: 'detail/:id',
               name: 'TabDetail',
-              component: () => import('/@/views/demo/feat/tabs/TabDetail.vue'),
+              component: () => import('@/views/demo/feat/tabs/TabDetail.vue'),
               meta: {
                 currentActiveMenu: '/feat/tabs',
                 title: t('routes.demo.feat.tabDetail'),
                 hideMenu: true,
                 dynamicLevel: 3,
-                realpath: 'feat/tabs/detail',
+                realPath: '/feat/tabs/detail',
               },
             },
           ],
@@ -96,17 +709,17 @@ const comp: AppRouteModule = {
         {
           path: 'breadcrumb',
           name: 'BreadcrumbDemo',
-          redirect: 'feat/breadcrumb/flat',
+          redirect: '/feat/breadcrumb/flat',
           component: getParentLayout('BreadcrumbDemo'),
           meta: {
             title: t('routes.demo.feat.breadcrumb'),
           },
-
+    
           children: [
             {
               path: 'flat',
               name: 'BreadcrumbFlatDemo',
-              component: () => import('/@/views/demo/feat/breadcrumb/FlatList.vue'),
+              component: () => import('@/views/demo/feat/breadcrumb/FlatList.vue'),
               meta: {
                 title: t('routes.demo.feat.breadcrumbFlat'),
               },
@@ -114,7 +727,7 @@ const comp: AppRouteModule = {
             {
               path: 'flatDetail',
               name: 'BreadcrumbFlatDetailDemo',
-              component: () => import('/@/views/demo/feat/breadcrumb/FlatListDetail.vue'),
+              component: () => import('@/views/demo/feat/breadcrumb/FlatListDetail.vue'),
               meta: {
                 title: t('routes.demo.feat.breadcrumbFlatDetail'),
                 hideMenu: true,
@@ -125,7 +738,7 @@ const comp: AppRouteModule = {
             {
               path: 'children',
               name: 'BreadcrumbChildrenDemo',
-              component: () => import('/@/views/demo/feat/breadcrumb/ChildrenList.vue'),
+              component: () => import('@/views/demo/feat/breadcrumb/ChildrenList.vue'),
               meta: {
                 title: t('routes.demo.feat.breadcrumbChildren'),
               },
@@ -133,7 +746,7 @@ const comp: AppRouteModule = {
                 {
                   path: 'childrenDetail',
                   name: 'BreadcrumbChildrenDetailDemo',
-                  component: () => import('/@/views/demo/feat/breadcrumb/ChildrenListDetail.vue'),
+                  component: () => import('@/views/demo/feat/breadcrumb/ChildrenListDetail.vue'),
                   meta: {
                     currentActiveMenu: '/feat/breadcrumb/children',
                     title: t('routes.demo.feat.breadcrumbChildrenDetail'),
@@ -145,11 +758,11 @@ const comp: AppRouteModule = {
             },
           ],
         },
-
+    
         {
           path: 'context-menu',
           name: 'ContextMenuDemo',
-          component: () => import('/@/views/demo/feat/context-menu/index.vue'),
+          component: () => import('@/views/demo/feat/context-menu/index.vue'),
           meta: {
             title: t('routes.demo.feat.contextMenu'),
           },
@@ -157,7 +770,7 @@ const comp: AppRouteModule = {
         {
           path: 'download',
           name: 'DownLoadDemo',
-          component: () => import('/@/views/demo/feat/download/index.vue'),
+          component: () => import('@/views/demo/feat/download/index.vue'),
           meta: {
             title: t('routes.demo.feat.download'),
           },
@@ -165,7 +778,7 @@ const comp: AppRouteModule = {
         {
           path: 'click-out-side',
           name: 'ClickOutSideDemo',
-          component: () => import('/@/views/demo/feat/click-out-side/index.vue'),
+          component: () => import('@/views/demo/feat/click-out-side/index.vue'),
           meta: {
             title: t('routes.demo.feat.clickOutSide'),
           },
@@ -173,7 +786,7 @@ const comp: AppRouteModule = {
         {
           path: 'img-preview',
           name: 'ImgPreview',
-          component: () => import('/@/views/demo/feat/img-preview/index.vue'),
+          component: () => import('@/views/demo/feat/img-preview/index.vue'),
           meta: {
             title: t('routes.demo.feat.imgPreview'),
           },
@@ -181,15 +794,23 @@ const comp: AppRouteModule = {
         {
           path: 'copy',
           name: 'CopyDemo',
-          component: () => import('/@/views/demo/feat/copy/index.vue'),
+          component: () => import('@/views/demo/feat/copy/index.vue'),
           meta: {
             title: t('routes.demo.feat.copy'),
           },
         },
         {
+          path: 'ellipsis',
+          name: 'EllipsisDemo',
+          component: () => import('@/views/demo/feat/ellipsis/index.vue'),
+          meta: {
+            title: t('routes.demo.feat.ellipsis'),
+          },
+        },
+        {
           path: 'msg',
           name: 'MsgDemo',
-          component: () => import('/@/views/demo/feat/msg/index.vue'),
+          component: () => import('@/views/demo/feat/msg/index.vue'),
           meta: {
             title: t('routes.demo.feat.msg'),
           },
@@ -197,7 +818,7 @@ const comp: AppRouteModule = {
         {
           path: 'watermark',
           name: 'WatermarkDemo',
-          component: () => import('/@/views/demo/feat/watermark/index.vue'),
+          component: () => import('@/views/demo/feat/watermark/index.vue'),
           meta: {
             title: t('routes.demo.feat.watermark'),
           },
@@ -205,7 +826,7 @@ const comp: AppRouteModule = {
         {
           path: 'ripple',
           name: 'RippleDemo',
-          component: () => import('/@/views/demo/feat/ripple/index.vue'),
+          component: () => import('@/views/demo/feat/ripple/index.vue'),
           meta: {
             title: t('routes.demo.feat.ripple'),
           },
@@ -213,15 +834,15 @@ const comp: AppRouteModule = {
         {
           path: 'full-screen',
           name: 'FullScreenDemo',
-          component: () => import('/@/views/demo/feat/full-screen/index.vue'),
+          component: () => import('@/views/demo/feat/full-screen/index.vue'),
           meta: {
             title: t('routes.demo.feat.fullScreen'),
           },
         },
         {
-          path: 'error-log',
+          path: '/error-log',
           name: 'ErrorLog',
-          component: () => import('/@/views/sys/error-log/index.vue'),
+          component: () => import('@/views/sys/error-log/index.vue'),
           meta: {
             title: t('routes.demo.feat.errorLog'),
           },
@@ -229,18 +850,18 @@ const comp: AppRouteModule = {
         {
           path: 'excel',
           name: 'Excel',
-          redirect: 'feat/excel/customExport',
+          redirect: '/feat/excel/customExport',
           component: getParentLayout('Excel'),
           meta: {
             // icon: 'mdi:microsoft-excel',
             title: t('routes.demo.excel.excel'),
           },
-
+    
           children: [
             {
               path: 'customExport',
               name: 'CustomExport',
-              component: () => import('/@/views/demo/excel/CustomExport.vue'),
+              component: () => import('@/views/demo/excel/CustomExport.vue'),
               meta: {
                 title: t('routes.demo.excel.customExport'),
               },
@@ -248,7 +869,7 @@ const comp: AppRouteModule = {
             {
               path: 'jsonExport',
               name: 'JsonExport',
-              component: () => import('/@/views/demo/excel/JsonExport.vue'),
+              component: () => import('@/views/demo/excel/JsonExport.vue'),
               meta: {
                 title: t('routes.demo.excel.jsonExport'),
               },
@@ -256,7 +877,7 @@ const comp: AppRouteModule = {
             {
               path: 'arrayExport',
               name: 'ArrayExport',
-              component: () => import('/@/views/demo/excel/ArrayExport.vue'),
+              component: () => import('@/views/demo/excel/ArrayExport.vue'),
               meta: {
                 title: t('routes.demo.excel.arrayExport'),
               },
@@ -264,7 +885,7 @@ const comp: AppRouteModule = {
             {
               path: 'importExcel',
               name: 'ImportExcel',
-              component: () => import('/@/views/demo/excel/ImportExcel.vue'),
+              component: () => import('@/views/demo/excel/ImportExcel.vue'),
               meta: {
                 title: t('routes.demo.excel.importExcel'),
               },
@@ -274,7 +895,7 @@ const comp: AppRouteModule = {
         {
           path: 'testTab/:id',
           name: 'TestTab',
-          component: () => import('/@/views/demo/feat/tab-params/index.vue'),
+          component: () => import('@/views/demo/feat/tab-params/index.vue'),
           meta: {
             title: t('routes.demo.feat.tab'),
             carryParam: true,
@@ -284,7 +905,7 @@ const comp: AppRouteModule = {
             {
               path: 'testTab/id1',
               name: 'TestTab1',
-              component: () => import('/@/views/demo/feat/tab-params/index.vue'),
+              component: () => import('@/views/demo/feat/tab-params/index.vue'),
               meta: {
                 title: t('routes.demo.feat.tab1'),
                 carryParam: true,
@@ -294,7 +915,7 @@ const comp: AppRouteModule = {
             {
               path: 'testTab/id2',
               name: 'TestTab2',
-              component: () => import('/@/views/demo/feat/tab-params/index.vue'),
+              component: () => import('@/views/demo/feat/tab-params/index.vue'),
               meta: {
                 title: t('routes.demo.feat.tab2'),
                 carryParam: true,
@@ -315,7 +936,7 @@ const comp: AppRouteModule = {
             {
               path: 'sub1',
               name: 'TestParam_1',
-              component: () => import('/@/views/demo/feat/menu-params/index.vue'),
+              component: () => import('@/views/demo/feat/menu-params/index.vue'),
               meta: {
                 title: t('routes.demo.feat.menu1'),
                 ignoreKeepAlive: true,
@@ -324,7 +945,7 @@ const comp: AppRouteModule = {
             {
               path: 'sub2',
               name: 'TestParam_2',
-              component: () => import('/@/views/demo/feat/menu-params/index.vue'),
+              component: () => import('@/views/demo/feat/menu-params/index.vue'),
               meta: {
                 title: t('routes.demo.feat.menu2'),
                 ignoreKeepAlive: true,
@@ -335,611 +956,10 @@ const comp: AppRouteModule = {
       ],
     },
     {
-      path: 'comp',
-      name: 'Comp',
-      redirect: 'comp/basic',
-      meta: {
-        orderNo: 30,
-        icon: 'ion:layers-outline',
-        title: t('routes.demo.comp.comp'),
-      },
-
-      children: [
-        {
-          path: 'basic',
-          name: 'BasicDemo',
-          component: () => import('/@/views/demo/comp/button/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.basic'),
-          },
-        },
-
-        {
-          path: 'form',
-          name: 'FormDemo',
-          redirect: 'comp/form/basic',
-          component: getParentLayout('FormDemo'),
-          meta: {
-            // icon: 'mdi:form-select',
-            title: t('routes.demo.form.form'),
-          },
-          children: [
-            {
-              path: 'basic',
-              name: 'FormBasicDemo',
-              component: () => import('/@/views/demo/form/index.vue'),
-              meta: {
-                title: t('routes.demo.form.basic'),
-              },
-            },
-            {
-              path: 'useForm',
-              name: 'UseFormDemo',
-              component: () => import('/@/views/demo/form/UseForm.vue'),
-              meta: {
-                title: t('routes.demo.form.useForm'),
-              },
-            },
-            {
-              path: 'refForm',
-              name: 'RefFormDemo',
-              component: () => import('/@/views/demo/form/RefForm.vue'),
-              meta: {
-                title: t('routes.demo.form.refForm'),
-              },
-            },
-            {
-              path: 'advancedForm',
-              name: 'AdvancedFormDemo',
-              component: () => import('/@/views/demo/form/AdvancedForm.vue'),
-              meta: {
-                title: t('routes.demo.form.advancedForm'),
-              },
-            },
-            {
-              path: 'ruleForm',
-              name: 'RuleFormDemo',
-              component: () => import('/@/views/demo/form/RuleForm.vue'),
-              meta: {
-                title: t('routes.demo.form.ruleForm'),
-              },
-            },
-            {
-              path: 'dynamicForm',
-              name: 'DynamicFormDemo',
-              component: () => import('/@/views/demo/form/DynamicForm.vue'),
-              meta: {
-                title: t('routes.demo.form.dynamicForm'),
-              },
-            },
-            {
-              path: 'customerForm',
-              name: 'CustomerFormDemo',
-              component: () => import('/@/views/demo/form/CustomerForm.vue'),
-              meta: {
-                title: t('routes.demo.form.customerForm'),
-              },
-            },
-            {
-              path: 'appendForm',
-              name: 'appendFormDemo',
-              component: () => import('/@/views/demo/form/AppendForm.vue'),
-              meta: {
-                title: t('routes.demo.form.appendForm'),
-              },
-            },
-            {
-              path: 'tabsForm',
-              name: 'tabsFormDemo',
-              component: () => import('/@/views/demo/form/TabsForm.vue'),
-              meta: {
-                title: t('routes.demo.form.tabsForm'),
-              },
-            },
-          ],
-        },
-        {
-          path: 'table',
-          name: 'TableDemo',
-          redirect: 'comp/table/basic',
-          component: getParentLayout('TableDemo'),
-          meta: {
-            // icon: 'carbon:table-split',
-            title: t('routes.demo.table.table'),
-          },
-
-          children: [
-            {
-              path: 'basic',
-              name: 'TableBasicDemo',
-              component: () => import('/@/views/demo/table/Basic.vue'),
-              meta: {
-                title: t('routes.demo.table.basic'),
-              },
-            },
-            {
-              path: 'treeTable',
-              name: 'TreeTableDemo',
-              component: () => import('/@/views/demo/table/TreeTable.vue'),
-              meta: {
-                title: t('routes.demo.table.treeTable'),
-              },
-            },
-            {
-              path: 'fetchTable',
-              name: 'FetchTableDemo',
-              component: () => import('/@/views/demo/table/FetchTable.vue'),
-              meta: {
-                title: t('routes.demo.table.fetchTable'),
-              },
-            },
-            {
-              path: 'fixedColumn',
-              name: 'FixedColumnDemo',
-              component: () => import('/@/views/demo/table/FixedColumn.vue'),
-              meta: {
-                title: t('routes.demo.table.fixedColumn'),
-              },
-            },
-            {
-              path: 'customerCell',
-              name: 'CustomerCellDemo',
-              component: () => import('/@/views/demo/table/CustomerCell.vue'),
-              meta: {
-                title: t('routes.demo.table.customerCell'),
-              },
-            },
-            {
-              path: 'formTable',
-              name: 'FormTableDemo',
-              component: () => import('/@/views/demo/table/FormTable.vue'),
-              meta: {
-                title: t('routes.demo.table.formTable'),
-              },
-            },
-            {
-              path: 'useTable',
-              name: 'UseTableDemo',
-              component: () => import('/@/views/demo/table/UseTable.vue'),
-              meta: {
-                title: t('routes.demo.table.useTable'),
-              },
-            },
-            {
-              path: 'refTable',
-              name: 'RefTableDemo',
-              component: () => import('/@/views/demo/table/RefTable.vue'),
-              meta: {
-                title: t('routes.demo.table.refTable'),
-              },
-            },
-            {
-              path: 'multipleHeader',
-              name: 'MultipleHeaderDemo',
-              component: () => import('/@/views/demo/table/MultipleHeader.vue'),
-              meta: {
-                title: t('routes.demo.table.multipleHeader'),
-              },
-            },
-            {
-              path: 'mergeHeader',
-              name: 'MergeHeaderDemo',
-              component: () => import('/@/views/demo/table/MergeHeader.vue'),
-              meta: {
-                title: t('routes.demo.table.mergeHeader'),
-              },
-            },
-            {
-              path: 'expandTable',
-              name: 'ExpandTableDemo',
-              component: () => import('/@/views/demo/table/ExpandTable.vue'),
-              meta: {
-                title: t('routes.demo.table.expandTable'),
-              },
-            },
-            {
-              path: 'fixedHeight',
-              name: 'FixedHeightDemo',
-              component: () => import('/@/views/demo/table/FixedHeight.vue'),
-              meta: {
-                title: t('routes.demo.table.fixedHeight'),
-              },
-            },
-            {
-              path: 'footerTable',
-              name: 'FooterTableDemo',
-              component: () => import('/@/views/demo/table/FooterTable.vue'),
-              meta: {
-                title: t('routes.demo.table.footerTable'),
-              },
-            },
-            {
-              path: 'editCellTable',
-              name: 'EditCellTableDemo',
-              component: () => import('/@/views/demo/table/EditCellTable.vue'),
-              meta: {
-                title: t('routes.demo.table.editCellTable'),
-              },
-            },
-            {
-              path: 'editRowTable',
-              name: 'EditRowTableDemo',
-              component: () => import('/@/views/demo/table/EditRowTable.vue'),
-              meta: {
-                title: t('routes.demo.table.editRowTable'),
-              },
-            },
-            {
-              path: 'authColumn',
-              name: 'AuthColumnDemo',
-              component: () => import('/@/views/demo/table/AuthColumn.vue'),
-              meta: {
-                title: t('routes.demo.table.authColumn'),
-              },
-            },
-            {
-              path: 'resizeParentHeightTable',
-              name: 'ResizeParentHeightTable',
-              component: () => import('/@/views/demo/table/ResizeParentHeightTable.vue'),
-              meta: {
-                title: t('routes.demo.table.resizeParentHeightTable'),
-              },
-            },
-          ],
-        },
-        {
-          path: 'transition',
-          name: 'transitionDemo',
-          component: () => import('/@/views/demo/comp/transition/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.transition'),
-          },
-        },
-        {
-          path: 'cropper',
-          name: 'CropperDemo',
-          component: () => import('/@/views/demo/comp/cropper/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.cropperImage'),
-          },
-        },
-
-        {
-          path: 'timestamp',
-          name: 'TimeDemo',
-          component: () => import('/@/views/demo/comp/time/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.time'),
-          },
-        },
-        {
-          path: 'countTo',
-          name: 'CountTo',
-          component: () => import('/@/views/demo/comp/count-to/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.countTo'),
-          },
-        },
-        {
-          path: 'tree',
-          name: 'TreeDemo',
-          redirect: 'comp/tree/basic',
-          component: getParentLayout('TreeDemo'),
-          meta: {
-            // icon: 'clarity:tree-view-line',
-            title: t('routes.demo.comp.tree'),
-          },
-          children: [
-            {
-              path: 'basic',
-              name: 'BasicTreeDemo',
-              component: () => import('/@/views/demo/tree/index.vue'),
-              meta: {
-                title: t('routes.demo.comp.treeBasic'),
-              },
-            },
-            {
-              path: 'editTree',
-              name: 'EditTreeDemo',
-              component: () => import('/@/views/demo/tree/EditTree.vue'),
-              meta: {
-                title: t('routes.demo.comp.editTree'),
-              },
-            },
-            {
-              path: 'actionTree',
-              name: 'ActionTreeDemo',
-              component: () => import('/@/views/demo/tree/ActionTree.vue'),
-              meta: {
-                title: t('routes.demo.comp.actionTree'),
-              },
-            },
-          ],
-        },
-        {
-          path: 'editor',
-          name: 'EditorDemo',
-          redirect: 'comp/editor/markdown',
-          component: getParentLayout('EditorDemo'),
-          meta: {
-            // icon: 'carbon:table-split',
-            title: t('routes.demo.editor.editor'),
-          },
-          children: [
-            {
-              path: 'json',
-              component: () => import('/@/views/demo/editor/json/index.vue'),
-              name: 'JsonEditorDemo',
-              meta: {
-                title: t('routes.demo.editor.jsonEditor'),
-              },
-            },
-            {
-              path: 'markdown',
-              component: getParentLayout('MarkdownDemo'),
-              name: 'MarkdownDemo',
-              meta: {
-                title: t('routes.demo.editor.markdown'),
-              },
-              redirect: 'comp/editor/markdown/index',
-              children: [
-                {
-                  path: 'index',
-                  name: 'MarkDownBasicDemo',
-                  component: () => import('/@/views/demo/editor/markdown/index.vue'),
-                  meta: {
-                    title: t('routes.demo.editor.tinymceBasic'),
-                  },
-                },
-                {
-                  path: 'editor',
-                  name: 'MarkDownFormDemo',
-                  component: () => import('/@/views/demo/editor/markdown/Editor.vue'),
-                  meta: {
-                    title: t('routes.demo.editor.tinymceForm'),
-                  },
-                },
-              ],
-            },
-
-            {
-              path: 'tinymce',
-              component: getParentLayout('TinymceDemo'),
-              name: 'TinymceDemo',
-              meta: {
-                title: t('routes.demo.editor.tinymce'),
-              },
-              redirect: 'comp/editor/tinymce/index',
-              children: [
-                {
-                  path: 'index',
-                  name: 'TinymceBasicDemo',
-                  component: () => import('/@/views/demo/editor/tinymce/index.vue'),
-                  meta: {
-                    title: t('routes.demo.editor.tinymceBasic'),
-                  },
-                },
-                {
-                  path: 'editor',
-                  name: 'TinymceFormDemo',
-                  component: () => import('/@/views/demo/editor/tinymce/Editor.vue'),
-                  meta: {
-                    title: t('routes.demo.editor.tinymceForm'),
-                  },
-                },
-              ],
-            },
-          ],
-        },
-        {
-          path: 'scroll',
-          name: 'ScrollDemo',
-          redirect: 'comp/scroll/basic',
-          component: getParentLayout('ScrollDemo'),
-          meta: {
-            title: t('routes.demo.comp.scroll'),
-          },
-          children: [
-            {
-              path: 'basic',
-              name: 'BasicScrollDemo',
-              component: () => import('/@/views/demo/comp/scroll/index.vue'),
-              meta: {
-                title: t('routes.demo.comp.scrollBasic'),
-              },
-            },
-            {
-              path: 'action',
-              name: 'ActionScrollDemo',
-              component: () => import('/@/views/demo/comp/scroll/Action.vue'),
-              meta: {
-                title: t('routes.demo.comp.scrollAction'),
-              },
-            },
-            {
-              path: 'virtualScroll',
-              name: 'VirtualScrollDemo',
-              component: () => import('/@/views/demo/comp/scroll/VirtualScroll.vue'),
-              meta: {
-                title: t('routes.demo.comp.virtualScroll'),
-              },
-            },
-          ],
-        },
-
-        {
-          path: 'modal',
-          name: 'ModalDemo',
-          component: () => import('/@/views/demo/comp/modal/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.modal'),
-          },
-        },
-        {
-          path: 'drawer',
-          name: 'DrawerDemo',
-          component: () => import('/@/views/demo/comp/drawer/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.drawer'),
-          },
-        },
-        {
-          path: 'desc',
-          name: 'DescDemo',
-          component: () => import('/@/views/demo/comp/desc/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.desc'),
-          },
-        },
-
-        {
-          path: 'verify',
-          name: 'VerifyDemo',
-          component: getParentLayout('VerifyDemo'),
-          redirect: 'comp/verify/drag',
-          meta: {
-            title: t('routes.demo.comp.verify'),
-          },
-          children: [
-            {
-              path: 'drag',
-              name: 'VerifyDragDemo',
-              component: () => import('/@/views/demo/comp/verify/index.vue'),
-              meta: {
-                title: t('routes.demo.comp.verifyDrag'),
-              },
-            },
-            {
-              path: 'rotate',
-              name: 'VerifyRotateDemo',
-              component: () => import('/@/views/demo/comp/verify/Rotate.vue'),
-              meta: {
-                title: t('routes.demo.comp.verifyRotate'),
-              },
-            },
-          ],
-        },
-        //
-
-        {
-          path: 'qrcode',
-          name: 'QrCodeDemo',
-          component: () => import('/@/views/demo/comp/qrcode/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.qrcode'),
-          },
-        },
-        {
-          path: 'strength-meter',
-          name: 'StrengthMeterDemo',
-          component: () => import('/@/views/demo/comp/strength-meter/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.strength'),
-          },
-        },
-        {
-          path: 'upload',
-          name: 'UploadDemo',
-          component: () => import('/@/views/demo/comp/upload/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.upload'),
-          },
-        },
-        {
-          path: 'loading',
-          name: 'LoadingDemo',
-          component: () => import('/@/views/demo/comp/loading/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.loading'),
-          },
-        },
-        {
-          path: 'cardList',
-          name: 'CardListDemo',
-          component: () => import('/@/views/demo/comp/card-list/index.vue'),
-          meta: {
-            title: t('routes.demo.comp.cardList'),
-          },
-        },
-      ],
-    },
-    {
-      path: 'charts',
-      name: 'Charts',
-      redirect: 'charts/echarts/map',
-      meta: {
-        orderNo: 500,
-        icon: 'ion:bar-chart-outline',
-        title: t('routes.demo.charts.charts'),
-      },
-      children: [
-        {
-          path: 'baiduMap',
-          name: 'BaiduMap',
-          meta: {
-            title: t('routes.demo.charts.baiduMap'),
-          },
-          component: () => import('/@/views/demo/charts/map/Baidu.vue'),
-        },
-        {
-          path: 'aMap',
-          name: 'AMap',
-          meta: {
-            title: t('routes.demo.charts.aMap'),
-          },
-          component: () => import('/@/views/demo/charts/map/Gaode.vue'),
-        },
-        {
-          path: 'googleMap',
-          name: 'GoogleMap',
-          meta: {
-            title: t('routes.demo.charts.googleMap'),
-          },
-          component: () => import('/@/views/demo/charts/map/Google.vue'),
-        },
-
-        {
-          path: 'echarts',
-          name: 'Echarts',
-          component: getParentLayout('Echarts'),
-          meta: {
-            title: 'Echarts',
-          },
-          redirect: 'charts/echarts/map',
-          children: [
-            {
-              path: 'map',
-              name: 'Map',
-              component: () => import('/@/views/demo/charts/Map.vue'),
-              meta: {
-                title: t('routes.demo.charts.map'),
-              },
-            },
-            {
-              path: 'line',
-              name: 'Line',
-              component: () => import('/@/views/demo/charts/Line.vue'),
-              meta: {
-                title: t('routes.demo.charts.line'),
-              },
-            },
-            {
-              path: 'pie',
-              name: 'Pie',
-              component: () => import('/@/views/demo/charts/Pie.vue'),
-              meta: {
-                title: t('routes.demo.charts.pie'),
-              },
-            },
-          ],
-        },
-      ],
-    },
-    {
-      path: 'flow',
+      path: '/flow',
       name: 'FlowDemo',
       component: LAYOUT,
-      redirect: 'flow/flowChart',
+      redirect: '/flow/flowChart',
       meta: {
         orderNo: 5000,
         icon: 'tabler:chart-dots',
@@ -949,7 +969,7 @@ const comp: AppRouteModule = {
         {
           path: 'flowChart',
           name: 'flowChartDemo',
-          component: () => import('/@/views/demo/comp/flow-chart/index.vue'),
+          component: () => import('@/views/demo/comp/flow-chart/index.vue'),
           meta: {
             title: t('routes.demo.flow.flowChart'),
           },
@@ -957,22 +977,23 @@ const comp: AppRouteModule = {
       ],
     },
     {
-      path: 'frame',
+      path: '/frame',
       name: 'Frame',
       component: LAYOUT,
-      redirect: 'frame/doc',
+      redirect: '/frame/doc',
       meta: {
         orderNo: 1000,
         icon: 'ion:tv-outline',
         title: t('routes.demo.iframe.frame'),
       },
+    
       children: [
         {
           path: 'doc',
           name: 'Doc',
           component: IFrame,
           meta: {
-            frameSrc: 'https://vvbin.cn/doc-next/',
+            frameSrc: 'https://doc.vvbin.cn/',
             title: t('routes.demo.iframe.doc'),
           },
         },
@@ -981,12 +1002,12 @@ const comp: AppRouteModule = {
           name: 'Antv',
           component: IFrame,
           meta: {
-            frameSrc: 'https://2x.antdv.com/docs/vue/introduce-cn/',
+            frameSrc: 'https://www.antdv.com/docs/vue/introduce-cn/',
             title: t('routes.demo.iframe.antv'),
           },
         },
         {
-          path: 'https://vvbin.cn/doc-next/',
+          path: 'https://doc.vvbin.cn/',
           name: 'DocExternal',
           component: IFrame,
           meta: {
@@ -996,16 +1017,16 @@ const comp: AppRouteModule = {
       ],
     },
     {
-      path: 'level',
+      path: '/level',
       name: 'Level',
       component: LAYOUT,
-      redirect: 'level/menu1/menu1-1/menu1-1-1',
+      redirect: '/level/menu1/menu1-1/menu1-1-1',
       meta: {
         orderNo: 2000,
         icon: 'ion:menu-outline',
         title: t('routes.demo.level.level'),
       },
-
+    
       children: [
         {
           path: 'menu1',
@@ -1014,7 +1035,7 @@ const comp: AppRouteModule = {
           meta: {
             title: 'Menu1',
           },
-          redirect: 'level/menu1/menu1-1/menu1-1-1',
+          redirect: '/level/menu1/menu1-1/menu1-1-1',
           children: [
             {
               path: 'menu1-1',
@@ -1023,12 +1044,12 @@ const comp: AppRouteModule = {
               meta: {
                 title: 'Menu1-1',
               },
-              redirect: 'level/menu1/menu1-1/menu1-1-1',
+              redirect: '/level/menu1/menu1-1/menu1-1-1',
               children: [
                 {
                   path: 'menu1-1-1',
                   name: 'Menu111Demo',
-                  component: () => import('/@/views/demo/level/Menu111.vue'),
+                  component: () => import('@/views/demo/level/Menu111.vue'),
                   meta: {
                     title: 'Menu111',
                   },
@@ -1038,7 +1059,7 @@ const comp: AppRouteModule = {
             {
               path: 'menu1-2',
               name: 'Menu12Demo',
-              component: () => import('/@/views/demo/level/Menu12.vue'),
+              component: () => import('@/views/demo/level/Menu12.vue'),
               meta: {
                 title: 'Menu1-2',
               },
@@ -1048,7 +1069,7 @@ const comp: AppRouteModule = {
         {
           path: 'menu2',
           name: 'Menu2Demo',
-          component: () => import('/@/views/demo/level/Menu2.vue'),
+          component: () => import('@/views/demo/level/Menu2.vue'),
           meta: {
             title: 'Menu2',
             // ignoreKeepAlive: true,
@@ -1057,10 +1078,10 @@ const comp: AppRouteModule = {
       ],
     },
     {
-      path: 'page-demo',
+      path: '/page-demo',
       name: 'PageDemo',
       component: LAYOUT,
-      redirect: 'page-demo/form/basic',
+      redirect: '/page-demo/form/basic',
       meta: {
         orderNo: 20,
         icon: 'ion:aperture-outline',
@@ -1071,7 +1092,7 @@ const comp: AppRouteModule = {
         {
           path: 'form',
           name: 'FormPage',
-          redirect: 'page-demo/form/basic',
+          redirect: '/page-demo/form/basic',
           component: getParentLayout('FormPage'),
           meta: {
             title: t('routes.demo.page.form'),
@@ -1080,7 +1101,7 @@ const comp: AppRouteModule = {
             {
               path: 'basic',
               name: 'FormBasicPage',
-              component: () => import('/@/views/demo/page/form/basic/index.vue'),
+              component: () => import('@/views/demo/page/form/basic/index.vue'),
               meta: {
                 title: t('routes.demo.page.formBasic'),
               },
@@ -1088,7 +1109,7 @@ const comp: AppRouteModule = {
             {
               path: 'step',
               name: 'FormStepPage',
-              component: () => import('/@/views/demo/page/form/step/index.vue'),
+              component: () => import('@/views/demo/page/form/step/index.vue'),
               meta: {
                 title: t('routes.demo.page.formStep'),
               },
@@ -1096,7 +1117,7 @@ const comp: AppRouteModule = {
             {
               path: 'high',
               name: 'FormHightPage',
-              component: () => import('/@/views/demo/page/form/high/index.vue'),
+              component: () => import('@/views/demo/page/form/high/index.vue'),
               meta: {
                 title: t('routes.demo.page.formHigh'),
               },
@@ -1109,7 +1130,7 @@ const comp: AppRouteModule = {
           path: 'desc',
           name: 'DescPage',
           component: getParentLayout('DescPage'),
-          redirect: 'page-demo/desc/basic',
+          redirect: '/page-demo/desc/basic',
           meta: {
             title: t('routes.demo.page.desc'),
           },
@@ -1117,7 +1138,7 @@ const comp: AppRouteModule = {
             {
               path: 'basic',
               name: 'DescBasicPage',
-              component: () => import('/@/views/demo/page/desc/basic/index.vue'),
+              component: () => import('@/views/demo/page/desc/basic/index.vue'),
               meta: {
                 title: t('routes.demo.page.descBasic'),
               },
@@ -1125,7 +1146,7 @@ const comp: AppRouteModule = {
             {
               path: 'high',
               name: 'DescHighPage',
-              component: () => import('/@/views/demo/page/desc/high/index.vue'),
+              component: () => import('@/views/demo/page/desc/high/index.vue'),
               meta: {
                 title: t('routes.demo.page.descHigh'),
               },
@@ -1133,14 +1154,14 @@ const comp: AppRouteModule = {
           ],
         },
         // =============================desc end=============================
-
+    
         // =============================result start=============================
         {
           path: 'result',
           name: 'ResultPage',
-          redirect: 'page-demo/result/success',
+          redirect: '/page-demo/result/success',
           component: getParentLayout('ResultPage'),
-
+    
           meta: {
             title: t('routes.demo.page.result'),
           },
@@ -1148,7 +1169,7 @@ const comp: AppRouteModule = {
             {
               path: 'success',
               name: 'ResultSuccessPage',
-              component: () => import('/@/views/demo/page/result/success/index.vue'),
+              component: () => import('@/views/demo/page/result/success/index.vue'),
               meta: {
                 title: t('routes.demo.page.resultSuccess'),
               },
@@ -1156,7 +1177,7 @@ const comp: AppRouteModule = {
             {
               path: 'fail',
               name: 'ResultFailPage',
-              component: () => import('/@/views/demo/page/result/fail/index.vue'),
+              component: () => import('@/views/demo/page/result/fail/index.vue'),
               meta: {
                 title: t('routes.demo.page.resultFail'),
               },
@@ -1164,13 +1185,13 @@ const comp: AppRouteModule = {
           ],
         },
         // =============================result end=============================
-
+    
         // =============================account start=============================
         {
           path: 'account',
           name: 'AccountPage',
           component: getParentLayout('AccountPage'),
-          redirect: 'page-demo/account/setting',
+          redirect: '/page-demo/account/setting',
           meta: {
             title: t('routes.demo.page.account'),
           },
@@ -1178,7 +1199,7 @@ const comp: AppRouteModule = {
             {
               path: 'center',
               name: 'AccountCenterPage',
-              component: () => import('/@/views/demo/page/account/center/index.vue'),
+              component: () => import('@/views/demo/page/account/center/index.vue'),
               meta: {
                 title: t('routes.demo.page.accountCenter'),
               },
@@ -1186,7 +1207,7 @@ const comp: AppRouteModule = {
             {
               path: 'setting',
               name: 'AccountSettingPage',
-              component: () => import('/@/views/demo/page/account/setting/index.vue'),
+              component: () => import('@/views/demo/page/account/setting/index.vue'),
               meta: {
                 title: t('routes.demo.page.accountSetting'),
               },
@@ -1199,7 +1220,7 @@ const comp: AppRouteModule = {
           path: 'exception',
           name: 'ExceptionPage',
           component: getParentLayout('ExceptionPage'),
-          redirect: 'page-demo/exception/404',
+          redirect: '/page-demo/exception/404',
           meta: {
             title: t('routes.demo.page.exception'),
           },
@@ -1267,7 +1288,7 @@ const comp: AppRouteModule = {
           path: 'list',
           name: 'ListPage',
           component: getParentLayout('ListPage'),
-          redirect: 'page-demo/list/card',
+          redirect: '/page-demo/list/card',
           meta: {
             title: t('routes.demo.page.list'),
           },
@@ -1275,7 +1296,7 @@ const comp: AppRouteModule = {
             {
               path: 'basic',
               name: 'ListBasicPage',
-              component: () => import('/@/views/demo/page/list/basic/index.vue'),
+              component: () => import('@/views/demo/page/list/basic/index.vue'),
               meta: {
                 title: t('routes.demo.page.listBasic'),
               },
@@ -1283,7 +1304,7 @@ const comp: AppRouteModule = {
             {
               path: 'card',
               name: 'ListCardPage',
-              component: () => import('/@/views/demo/page/list/card/index.vue'),
+              component: () => import('@/views/demo/page/list/card/index.vue'),
               meta: {
                 title: t('routes.demo.page.listCard'),
               },
@@ -1291,7 +1312,7 @@ const comp: AppRouteModule = {
             {
               path: 'search',
               name: 'ListSearchPage',
-              component: () => import('/@/views/demo/page/list/search/index.vue'),
+              component: () => import('@/views/demo/page/list/search/index.vue'),
               meta: {
                 title: t('routes.demo.page.listSearch'),
               },
@@ -1302,16 +1323,16 @@ const comp: AppRouteModule = {
       ],
     },
     {
-      path: 'permission',
+      path: '/permission',
       name: 'Permission',
       component: LAYOUT,
-      redirect: 'permission/front/page',
+      redirect: '/permission/front/page',
       meta: {
         orderNo: 15,
         icon: 'ion:key-outline',
         title: t('routes.demo.permission.permission'),
       },
-
+    
       children: [
         {
           path: 'front',
@@ -1324,7 +1345,7 @@ const comp: AppRouteModule = {
             {
               path: 'page',
               name: 'FrontPageAuth',
-              component: () => import('/@/views/demo/permission/front/index.vue'),
+              component: () => import('@/views/demo/permission/front/index.vue'),
               meta: {
                 title: t('routes.demo.permission.frontPage'),
               },
@@ -1332,7 +1353,7 @@ const comp: AppRouteModule = {
             {
               path: 'btn',
               name: 'FrontBtnAuth',
-              component: () => import('/@/views/demo/permission/front/Btn.vue'),
+              component: () => import('@/views/demo/permission/front/Btn.vue'),
               meta: {
                 title: t('routes.demo.permission.frontBtn'),
               },
@@ -1340,7 +1361,7 @@ const comp: AppRouteModule = {
             {
               path: 'auth-pageA',
               name: 'FrontAuthPageA',
-              component: () => import('/@/views/demo/permission/front/AuthPageA.vue'),
+              component: () => import('@/views/demo/permission/front/AuthPageA.vue'),
               meta: {
                 title: t('routes.demo.permission.frontTestA'),
                 roles: [RoleEnum.SUPER],
@@ -1349,7 +1370,7 @@ const comp: AppRouteModule = {
             {
               path: 'auth-pageB',
               name: 'FrontAuthPageB',
-              component: () => import('/@/views/demo/permission/front/AuthPageB.vue'),
+              component: () => import('@/views/demo/permission/front/AuthPageB.vue'),
               meta: {
                 title: t('routes.demo.permission.frontTestB'),
                 roles: [RoleEnum.TEST],
@@ -1368,7 +1389,7 @@ const comp: AppRouteModule = {
             {
               path: 'page',
               name: 'BackAuthPage',
-              component: () => import('/@/views/demo/permission/back/index.vue'),
+              component: () => import('@/views/demo/permission/back/index.vue'),
               meta: {
                 title: t('routes.demo.permission.backPage'),
               },
@@ -1376,7 +1397,7 @@ const comp: AppRouteModule = {
             {
               path: 'btn',
               name: 'BackAuthBtn',
-              component: () => import('/@/views/demo/permission/back/Btn.vue'),
+              component: () => import('@/views/demo/permission/back/Btn.vue'),
               meta: {
                 title: t('routes.demo.permission.backBtn'),
               },
@@ -1386,23 +1407,23 @@ const comp: AppRouteModule = {
       ],
     },
     {
-      path: 'setup',
-      name: 'SetupDemo',
+      path: '/steps',
+      name: 'StepsDemo',
       component: LAYOUT,
-      redirect: 'setup/index',
+      redirect: '/steps/index',
       meta: {
         orderNo: 90000,
         hideChildrenInMenu: true,
         icon: 'whh:paintroll',
-        title: t('routes.demo.setup.page'),
+        title: t('routes.demo.steps.page'),
       },
       children: [
         {
           path: 'index',
-          name: 'SetupDemoPage',
-          component: () => import('/@/views/demo/setup/index.vue'),
+          name: 'StepsDemoPage',
+          component: () => import('@/views/demo/steps/index.vue'),
           meta: {
-            title: t('routes.demo.setup.page'),
+            title: t('routes.demo.steps.page'),
             icon: 'whh:paintroll',
             hideMenu: true,
           },
@@ -1410,10 +1431,10 @@ const comp: AppRouteModule = {
       ],
     },
     {
-      path: 'system',
+      path: '/system',
       name: 'System',
       component: LAYOUT,
-      redirect: 'system/account',
+      redirect: '/system/account',
       meta: {
         orderNo: 2000,
         icon: 'ion:settings-outline',
@@ -1427,7 +1448,16 @@ const comp: AppRouteModule = {
             title: t('routes.demo.system.account'),
             ignoreKeepAlive: false,
           },
-          component: () => import('/@/views/demo/system/account/index.vue'),
+          component: () => import('@/views/demo/system/account/index.vue'),
+        },
+        {
+          path: 'vxeTableAccount',
+          name: 'VxeTableAccountManagement',
+          meta: {
+            title: t('routes.demo.system.vxeTableAccount'),
+            ignoreKeepAlive: false,
+          },
+          component: () => import('@/views/demo/system/vxe-account/index.vue'),
         },
         {
           path: 'account_detail/:id',
@@ -1439,7 +1469,7 @@ const comp: AppRouteModule = {
             showMenu: false,
             currentActiveMenu: '/system/account',
           },
-          component: () => import('/@/views/demo/system/account/AccountDetail.vue'),
+          component: () => import('@/views/demo/system/account/AccountDetail.vue'),
         },
         {
           path: 'role',
@@ -1448,8 +1478,9 @@ const comp: AppRouteModule = {
             title: t('routes.demo.system.role'),
             ignoreKeepAlive: true,
           },
-          component: () => import('/@/views/demo/system/role/index.vue'),
+          component: () => import('@/views/demo/system/role/index.vue'),
         },
+    
         {
           path: 'menu',
           name: 'MenuManagement',
@@ -1457,7 +1488,7 @@ const comp: AppRouteModule = {
             title: t('routes.demo.system.menu'),
             ignoreKeepAlive: true,
           },
-          component: () => import('/@/views/demo/system/menu/index.vue'),
+          component: () => import('@/views/demo/system/menu/index.vue'),
         },
         {
           path: 'dept',
@@ -1466,7 +1497,7 @@ const comp: AppRouteModule = {
             title: t('routes.demo.system.dept'),
             ignoreKeepAlive: true,
           },
-          component: () => import('/@/views/demo/system/dept/index.vue'),
+          component: () => import('@/views/demo/system/dept/index.vue'),
         },
         {
           path: 'changePassword',
@@ -1475,11 +1506,84 @@ const comp: AppRouteModule = {
             title: t('routes.demo.system.password'),
             ignoreKeepAlive: true,
           },
-          component: () => import('/@/views/demo/system/password/index.vue'),
+          component: () => import('@/views/demo/system/password/index.vue'),
         },
       ],
     },
-  ],
+    {
+      path: '/useRequest',
+      name: 'useRequest',
+      component: LAYOUT,
+      redirect: '/useRequest/base',
+      meta: {
+        orderNo: 900,
+        icon: 'ant-design:api-outlined',
+        title: 'useRequest',
+      },
+      children: [
+        {
+          path: 'base',
+          name: 'useRequest-base',
+          meta: { title: '基础用法' },
+          component: () => import('@/views/hooks/request/base'),
+        },
+        {
+          path: 'loading-delay',
+          name: 'useRequest-loading-delay',
+          meta: { title: 'Loading Delay' },
+          component: () => import('@/views/hooks/request/loading-delay'),
+        },
+        {
+          path: 'polling',
+          name: 'useRequest-polling',
+          meta: { title: '轮询' },
+          component: () => import('@/views/hooks/request/polling'),
+        },
+        {
+          path: 'ready',
+          name: 'useRequest-ready',
+          meta: { title: 'Ready' },
+          component: () => import('@/views/hooks/request/ready'),
+        },
+        {
+          path: 'refresy-deps',
+          name: 'useRequest-refresy-deps',
+          meta: { title: '依赖刷新' },
+          component: () => import('@/views/hooks/request/refresy-deps'),
+        },
+        {
+          path: 'refresh-on-window-focus',
+          name: 'useRequest-refresh-on-window-focus',
+          meta: { title: '屏幕聚焦重新请求' },
+          component: () => import('@/views/hooks/request/refresh-on-window-focus'),
+        },
+        {
+          path: 'debounce',
+          name: 'useRequest-debounce',
+          meta: { title: '防抖' },
+          component: () => import('@/views/hooks/request/debounce'),
+        },
+        {
+          path: 'throttle',
+          name: 'useRequest-throttle',
+          meta: { title: '节流' },
+          component: () => import('@/views/hooks/request/throttle'),
+        },
+        {
+          path: 'cache',
+          name: 'useRequest-cache',
+          meta: { title: '缓存&SWR' },
+          component: () => import('@/views/hooks/request/cache'),
+        },
+        {
+          path: 'retry',
+          name: 'useRequest-retry',
+          meta: { title: '错误重试' },
+          component: () => import('@/views/hooks/request/retry'),
+        },
+      ],
+    }
+  ]
 };
 
-export default comp;
+export default demo;

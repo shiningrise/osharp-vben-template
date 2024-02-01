@@ -78,6 +78,7 @@
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '@/hooks/web/useDesign';
   //import { onKeyStroke } from '@vueuse/core';
+  import { GrantTypeEnum } from '@/api/sys/model/userModel'
 
   const ACol = Col;
   const ARow = Row;

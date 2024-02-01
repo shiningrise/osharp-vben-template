@@ -21,10 +21,6 @@ export abstract class AxiosTransform {
    */
   isTokenRefreshing: boolean | undefined;
   /**
-   * @description: is token refreshing
-   */
-  isTokenRefreshing: boolean | undefined;
-  /**
    * A function that is called before a request is sent. It can modify the request configuration as needed.
    * 在发送请求之前调用的函数。它可以根据需要修改请求配置。
    */
