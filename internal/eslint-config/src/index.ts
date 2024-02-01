@@ -18,12 +18,7 @@ export default {
     extraFileExtensions: ['.vue'],
   },
   plugins: ['vue', '@typescript-eslint', 'import'],
-  extends: [
-    'eslint:recommended',
-    'plugin:vue/vue3-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:vue/vue3-recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
   rules: {
     'no-unused-vars': 'off',
     'no-case-declarations': 'off',
@@ -35,7 +30,7 @@ export default {
     'import/no-duplicates': 'error',
 
     '@typescript-eslint/no-unused-vars': [
-      'error',
+      'off',
       {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',

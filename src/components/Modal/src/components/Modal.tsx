@@ -3,7 +3,7 @@ import { defineComponent, toRefs, unref } from 'vue';
 import { basicProps } from '../props';
 import { useModalDragMove } from '../hooks/useModalDrag';
 import { useAttrs } from '@vben/hooks';
-import { extendSlots } from '/@/utils/helper/tsxHelper';
+import { extendSlots } from '@/utils/helper/tsxHelper';
 
 export default defineComponent({
   name: 'Modal',
@@ -11,10 +11,10 @@ export default defineComponent({
   props: basicProps as any,
   emits: ['cancel'],
   setup(props, { slots, emit }) {
-    const { visible, draggable, destroyOnClose } = toRefs(props);
+    const { open, draggable, destroyOnClose } = toRefs(props);
     const attrs = useAttrs();
     useModalDragMove({
-      visible,
+      open,
       destroyOnClose,
       draggable,
     });

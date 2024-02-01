@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
-import { Result } from '/#/axios';
-import { isObject, isString } from '/@/utils/is';
+import { Result } from '#/axios';
+import { isObject, isString } from '@/utils/is';
 
 const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 

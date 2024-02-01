@@ -18,11 +18,7 @@
       :edit-form-props-fn="setModulesFormFn"
       :transport-submit-data="transportSetModulesData"
       @on-close="tableMethods.reload()"
-    >
-      <template #formTemplates>
-        <a-input placeholder="自定义slot" />
-      </template>
-    </AdminEditModal>
+    />
   </div>
 </template>
 
@@ -153,6 +149,7 @@
         label: '模块',
         field: 'moduleIds',
         colProps: { span: 24 },
+        colProps: { span: 24 },
         component: 'ApiTree',
         componentProps: ({ formModel }) => ({
           api: readRoleModulesApi,
@@ -175,8 +172,30 @@
         }),
       },
     ];
-
     return p;
+  }
+
+  function afterRoleModulesDataFetch(v: any[]) {
+    for (const item of v) {
+      item.title = item.name;
+      item.key = item.id;
+      item.value = item.id;
+      item.disabled = item.isSystem;
+      if (item.children && item.children.length > 0) {
+        afterRoleModulesDataFetch(item.children);
+      }
+    }
+    return v;
+  }
+
+  async function roleModulesDataApi(param) {
+    console.log('roleModulesDataApi', param);
+    if (!param.roleId) {
+      return [];
+    }
+    const result = await defHttp.get<Result>({ url: `/admin/module/readRoleModules?roleId=${param.roleId}` });
+    const treeData: any[] = result.data;
+    return treeData;
   }
 
   function transportSetModulesData(p: Recordable): Recordable {

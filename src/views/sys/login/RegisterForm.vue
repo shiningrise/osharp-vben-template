@@ -1,5 +1,5 @@
 <template>
-  <template v-if="getShow">
+  <div v-if="getShow">
     <LoginFormTitle class="enter-x" />
     <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef">
       <FormItem name="userName" class="enter-x">
@@ -41,19 +41,20 @@
         {{ t('sys.login.backSignIn') }}
       </Button>
     </Form>
-  </template>
+  </div>
 </template>
 <script lang="ts" setup>
   import { reactive, ref, unref, computed, onMounted } from 'vue';
   import { Guid } from 'guid-typescript';
   import LoginFormTitle from './LoginFormTitle.vue';
   import { Form, Input, Button, Checkbox } from 'ant-design-vue';
-  import { StrengthMeter } from '/@/components/StrengthMeter';
-  import { useI18n } from '/@/hooks/web/useI18n';
+  import { StrengthMeter } from '@/components/StrengthMeter';
+  import { CountdownInput } from '@/components/CountDown';
+  import { useI18n } from '@/hooks/web/useI18n';
   import { useLoginState, useFormRules, useFormValid, LoginStateEnum } from './useLogin';
-  import { useUserStore } from '/@/store/modules/user';
-  import { useMessage } from '/@/hooks/web/useMessage';
-  import { InputCaptcha } from '/@/components/Osharp';
+  import { useUserStore } from '@/store/modules/user';
+  import { useMessage } from '@/hooks/web/useMessage';
+  import { InputCaptcha } from '@/components/Osharp';
   const { createMessage, createErrorModal } = useMessage();
   const userStore = useUserStore();
 
