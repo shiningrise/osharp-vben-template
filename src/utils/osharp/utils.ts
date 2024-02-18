@@ -96,6 +96,23 @@ export function transTagToOptions(tag: OSharpTag): LabeledValue[] {
   return opts;
 }
 
+/**
+ * 获取对象的HashCode
+ * @param obj 待获取HashCode的对象
+ */
+export function getHashCode(obj: any): number {
+  let hash = 0, i, chr;
+  const str = JSON.stringify(obj);
+  if (str.length === 0) return hash;
+  for (i = 0; i < str.length; i++) {
+    chr   = str.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // 将hash转换为32位整数
+  }
+  return hash;
+}
+
+
 //#endregion
 
 //#region DataSource

@@ -31,6 +31,55 @@ export enum FilterOperate {
   NotContains = 12,
 }
 
+export class FilterOperateEntry {
+  display: string;
+
+  constructor(public operate: FilterOperate) {
+    switch (operate) {
+      case FilterOperate.And:
+        this.display = '并且';
+        break;
+      case FilterOperate.Or:
+        this.display = '或者';
+        break;
+      case FilterOperate.Equal:
+        this.display = '等于';
+        break;
+      case FilterOperate.NotEqual:
+        this.display = '不等于';
+        break;
+      case FilterOperate.Less:
+        this.display = '小于';
+        break;
+      case FilterOperate.LessOrEqual:
+        this.display = '小于等于';
+        break;
+      case FilterOperate.Greater:
+        this.display = '大于';
+        break;
+      case FilterOperate.GreaterOrEqual:
+        this.display = '大于等于';
+        break;
+      case FilterOperate.StartsWith:
+        this.display = '开始于';
+        break;
+      case FilterOperate.EndsWith:
+        this.display = '结束于';
+        break;
+      case FilterOperate.Contains:
+        this.display = '包含';
+        break;
+      case FilterOperate.NotContains:
+        this.display = '不包含';
+        break;
+      default:
+        this.display = '未知操作';
+        break;
+    }
+    this.display = `${operate as number}.${this.display}`;
+  }
+}
+
 export enum ListSortDirection {
   Ascending,
   Descending,
@@ -67,6 +116,15 @@ export interface FilterGroup {
   operate: FilterOperate | number;
   /** 条件组集合 */
   groups: FilterGroup[];
+  level: number;
+}
+
+export interface EntityProperty{
+  name: string;
+  display?: string;
+  typeName: string;
+  isUserFlag: boolean;
+  valueRange:any[];
 }
 
 /** 分布请求 */
