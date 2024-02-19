@@ -174,7 +174,7 @@ export function buildFilterGroup(record: Recordable, filterSchemas: FormSchema[]
       continue;
     }
     const value = record[field];
-    if (value == undefined || value == null || value == '') {
+    if (value === undefined || value === null || value === '') {
       continue;
     }
     const props: any = schema.componentProps;
