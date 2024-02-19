@@ -17,7 +17,7 @@
   </Row>
 </template>
 <script lang="ts" setup>
-  import { defineProps, defineEmits, PropType, ref, watchEffect } from 'vue';
+  import { PropType, ref, watchEffect } from 'vue';
   import { Row, Col, Select, SelectOption, Button } from 'ant-design-vue';
   import { cloneDeep } from 'lodash';
   import { FilterGroup, FilterRule, getHashCode, FilterOperate, EntityProperty, defFilterGroup, defGroupOperateEntries } from '/@/utils/osharp';

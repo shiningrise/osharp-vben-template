@@ -35,7 +35,7 @@
   </Row>
 </template>
 <script lang="ts" setup>
-  import { defineProps, defineEmits, PropType, ref, onMounted } from 'vue';
+  import { PropType, ref, onMounted } from 'vue';
   import { Row, Col, Select, SelectOption, DatePicker, Input, InputNumber, Switch, Button } from 'ant-design-vue';
   import { SelectValue } from 'ant-design-vue/es/select';
   import { FilterRule, EntityProperty, FilterOperate, FilterOperateEntry, getHashCode } from '/@/utils/osharp';
