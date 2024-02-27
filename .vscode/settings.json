@@ -70,7 +70,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -183,5 +183,8 @@
   },
   "terminal.integrated.scrollback": 10000,
   "nuxt.isNuxtApp": false,
-  "vue.codeActions.enabled": false
+  "vue.codeActions.enabled": false,
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }

@@ -30,4 +30,8 @@ export default {
     article: '文章管理',
     message: '站内信管理',
   },
+  sys: {
+    sys: '系统',
+    pack: '包模块'
+  }
 };

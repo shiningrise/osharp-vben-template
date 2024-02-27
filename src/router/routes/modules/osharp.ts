@@ -164,6 +164,29 @@ const osharp: AppRouteModule = {
         },
       ],
     },
+    {
+      path: 'sys',
+      name: 'Sys',
+      component: getParentLayout('Sys'),
+      redirect: '/system/sys/pack',
+      meta: {
+        title: t('routes.osharp.sys.sys'),
+        icon: 'ant-design:info-circle-outlined',
+        acl: ['Root.Admin.Systems']
+      },
+      children: [
+        {
+          path: 'pack',
+          name: 'Pack',
+          component: () => import('/@/views/osharp/sys/Pack.vue'),
+          meta: {
+            title: t('routes.osharp.sys.pack'),
+            icon: 'ant-design:container-outlined',
+            acl: ['Root.Admin.Systems.Pack'],
+          }
+        }
+      ]
+    },
   ],
 };
 

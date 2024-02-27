@@ -30,4 +30,8 @@ export default {
     article: 'Article',
     message: 'Message',
   },
+  sys: {
+    sys: 'System',
+    pack: 'Packs'
+  }
 };
