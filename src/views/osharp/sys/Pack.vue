@@ -39,7 +39,6 @@ const filterSchemas: FormSchema[] = [
     colProps: { span: 4 },
   },
   { label: '是否启用', field: 'isEnabled', component: 'Switch', componentProps: { operate: FilterOperate.Equal }, colProps: { span: 4 } },
-
 ];
 
 const adminTableProps: AdminTableProps = {

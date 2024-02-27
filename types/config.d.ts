@@ -59,6 +59,7 @@ export interface HeaderSetting {
   showNotice: boolean;
   showSearch: boolean;
   showApi: boolean;
+  showAuth: boolean;
 }
 
 export interface LocaleSetting {

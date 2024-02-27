@@ -5,6 +5,7 @@
   },
   "header": {
     "dropdownChangeApi": "Change Api",
+    "dropdownRefreshAuth": "Refresh Auth",
     "dropdownItemDoc": "Document",
     "dropdownItemLoginOut": "Log Out",
     "tooltipErrorLog": "Error log",

@@ -77,6 +77,7 @@ const setting: ProjectConfig = {
     // Whether to display the menu search
     showSearch: true,
     showApi: true,
+    showAuth: true,
   },
 
   // Menu configuration
