@@ -31,6 +31,7 @@ const props = defineProps({
   group: { type: Object as PropType<FilterGroup>, required: true },
   entity: { type: String, required: true },
 });
+
 const group = ref<FilterGroup>(props.group);
 const entityProperties = ref<EntityProperty[]>([]);
 

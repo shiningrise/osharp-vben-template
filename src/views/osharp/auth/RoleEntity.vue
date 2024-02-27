@@ -13,9 +13,12 @@
     <AdminTable v-bind="adminTableProps">
       <template #expandedRowRender="{ record }">
         <div>
-          <FilterGroupV :group="record.filterGroup" :entity="record.entityType"></FilterGroupV>
+          <FilterGroupV :group="record.filterGroup || { rules: [], groups: [], operate: FilterOperate.And, level: 1 }"
+            :entity="record.entityType"></FilterGroupV>
           <Button @click="showGroupJson(record)" type="primary" style="margin: 5px;">显示JSON</Button>
-          <Button @click="saveFilterGroup(record)" type="default" style="margin: 5px;">保存</Button>
+          <Authority :value="`${authPath}.SetFilterGroup`">
+            <Button @click="saveFilterGroup(record)" type="default" style="margin: 5px;">保存</Button>
+          </Authority>
           <Alert v-if="record.groupJson" type="info" :showIcon="true" message="筛选规则JSON"
             :description="record.groupJson" />
         </div>
@@ -27,12 +30,13 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { Button, Alert } from 'ant-design-vue';
-import { AdminTable, AdminTableProps, FilterGroupV, FilterRuleV } from '/@/components/Osharp';
+import { AdminTable, AdminTableProps, FilterGroupV } from '/@/components/Osharp';
 import { ActionItem, BasicColumn, BasicTableProps, FormSchema, FormProps } from '/@/components/Table';
+import { Authority } from '/@/components/Authority';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { cloneDeep } from 'lodash';
 import { CheckboxRender, TagRender, defaultModuleInfo, ModuleInfo, FilterOperate, transTagToOptions, dataAuthOperationTags, FilterGroup } from '/@/utils/osharp';
-import { readRoleNodeApi, readEntityinfoNodeApi, updateRoleEntityApi } from '/@/api/osharp';
+import { readRoleNodeApi, readEntityinfoNodeApi, setRoleEntityFilterGroupApi } from '/@/api/osharp';
 
 const module: ModuleInfo = {
   ...defaultModuleInfo,
@@ -107,18 +111,17 @@ function editFormPropsFn(p: FormProps): FormProps {
 function showGroupJson(record: Recordable) {
   let group = cloneDeep(record.filterGroup);
   cleanGroup(group);
-  record.groupJson = JSON.stringify(group, null, 2);
+  //record.groupJson = JSON.stringify(group, null, 2);
+  record.groupJson = authPath;
 }
 
 async function saveFilterGroup(record: Recordable) {
   let group = cloneDeep(record.filterGroup);
   cleanGroup(group);
-  var dto = { id: record.id, roleId: record.roleId, entityId: record.entityId, operation: record.operation, filterGroup: group, isLocked: record.isLocked };
-  const result = await updateRoleEntityApi([dto]);
-  console.log(result);
+  await setRoleEntityFilterGroupApi(record.id, group);
 }
 
-function cleanGroup(group:FilterGroup){
+function cleanGroup(group: FilterGroup) {
   delete group['key'];
   for (let index = 0; index < group.rules.length; index++) {
     const rule = group.rules[index];

@@ -1,9 +1,9 @@
 import { Result } from "#/axios"
 import { defHttp } from "@/utils/http/axios"
+import { FilterGroup } from "@/utils/osharp";
 
-export async function updateRoleEntityApi(dtos:Recordable[]){
-  const url = '/admin/roleentity/update'
-  console.log('updateRoleEntityApi', dtos);
-  const result = await defHttp.post<Result>({ url: url, data: dtos });
+export async function setRoleEntityFilterGroupApi(id: any, group: FilterGroup) {
+  const url = `/admin/roleentity/setfiltergroup?id=${id}`;
+  const result = await defHttp.post<Result>({ url: url, data: group });
   return result;
 }

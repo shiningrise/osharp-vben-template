@@ -95,7 +95,7 @@
     tableDropDownActionsFn: tableDropDownActionsFn,
     filterFormPropsFn: filterFormPropsFn,
     editFormPropsFn: editFormPropsFn,
-    editModalFn: (m, r) => m.setModalProps({ title: `更新${module.entityDisplay} - ${r.name}` }),
+    editModalFn: (m, r) => m.setModalProps({ title: `更新${module.entityDisplay} - ${r.userName}` }),
   };
 
   function tablePropsFn(p: BasicTableProps): BasicTableProps {
