@@ -117,6 +117,8 @@ export interface FilterGroup {
   /** 条件组集合 */
   groups: FilterGroup[];
   level: number;
+  /** 其他数据字典 */
+  [key: string]: any;
 }
 
 export interface EntityProperty{

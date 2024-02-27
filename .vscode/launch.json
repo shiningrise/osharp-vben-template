@@ -4,7 +4,8 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome",
+      "runtimeExecutable": "C:\\Users\\mfguo\\AppData\\Local\\360ChromeX\\Chrome\\Application\\360ChromeX.exe",
+      "name": "Launch 360se",
       "url": "http://localhost:3200",
       "webRoot": "${workspaceFolder}/src",
       "sourceMaps": true

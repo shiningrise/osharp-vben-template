@@ -189,7 +189,6 @@
   }
 
   async function roleModulesDataApi(param) {
-    console.log('roleModulesDataApi', param);
     if (!param.roleId) {
       return [];
     }
