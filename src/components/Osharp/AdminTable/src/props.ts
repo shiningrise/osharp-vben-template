@@ -1,4 +1,7 @@
-import { PageData } from './../../../../utils/osharp/types';
+import { FilterGroup } from '@/utils/osharp';
+import { PropType } from 'vue';
+import { FilterGroup } from '@/utils/osharp';
+import { FilterGroup, PageData } from './../../../../utils/osharp/types';
 import { ModuleInfo } from '/@/utils/osharp';
 import { ActionItem, BasicTableProps, EditRecordRow, FormProps } from '/@/components/Table';
 import { ModalMethods } from '/@/components/Modal';
@@ -65,5 +68,46 @@ export const adminFunctionViewDrawerProps = {
   },
   tableProps: {
     type: Object as PropType<BasicTableProps>,
+  },
+};
+
+export const adminSearchDrawerProps = {
+  record: {
+    type: Object as PropType<Recordable>,
+    required: false,
+  },
+  module: {
+    type: Object as PropType<ModuleInfo>,
+    required: true,
+  },
+  group: {
+    type: Object as PropType<FilterGroup>,
+    required: true,
+  },
+  entity: {
+    type: String,
+    required: true,
+  }
+};
+
+export const adminSearchModalProps = {
+  /** 模块信息 */
+  module: {
+    type: Object as PropType<ModuleInfo>,
+    required: true,
+  },
+  /** 过滤条件组 */
+  group: {
+    type: Object as PropType<FilterGroup>,
+    required: true,
+  },
+  /** 实体类型 */
+  entity: {
+    type: String,
+    required: true,
+  },
+  /** 转换提交的数据 */
+  transportSubmitData: {
+    type: Function as PropType<(p: Recordable) => Recordable>,
   },
 };

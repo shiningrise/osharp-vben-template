@@ -7,15 +7,15 @@
       </template>
       <template #toolbar>
         <Authority :value="`${authPath}.Create`">
-          <a-button type="primary" @click="createRow">新建</a-button>
+          <Button type="primary" @click="createRow">新建</Button>
         </Authority>
         <Authority :value="`${authPath}.Delete`">
-          <a-button type="primary" @click="deleteRows">批量删除</a-button>
+          <Button type="primary" @click="deleteRows">批量删除</Button>
         </Authority>
         <slot name="appandToolbar"></slot>
       </template>
       <template #form-resetBefore>
-        <a-button @click="openAdvanceFilter" style="margin-right: 8px">高级搜索</a-button>
+        <Button @click="openAdvanceFilter" style="margin-right: 8px">高级搜索</Button>
       </template>
       <template #actionCol="{ record }">
         <TableAction :actions="getTableActions(record)" :drop-down-actions="getTableDropDownActions(record)" />
@@ -23,11 +23,12 @@
       <slot name="tableTemplates"></slot>
     </BasicTable>
     <slot name="afterTable"></slot>
-    <AdminEditModal @register="registerModal" @on-close="onModalClose" :module="props.module" :edit-form-props-fn="props.editFormPropsFn" />
+    <AdminEditModal @register="registerModal" @on-close="onModalClose" :module="props.module" :edit-form-props-fn="props.editFormPropsFn" />    
   </div>
 </template>
 
 <script lang="ts" setup>
+  import { Button } from 'ant-design-vue';
   import { ActionItem, BasicTable, BasicTableProps, useTable, TableAction, FormProps } from '/@/components/Table';
   import { computed, ref } from 'vue';
   import { Result } from '/#/axios';

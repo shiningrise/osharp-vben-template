@@ -188,15 +188,6 @@
     return v;
   }
 
-  async function roleModulesDataApi(param) {
-    if (!param.roleId) {
-      return [];
-    }
-    const result = await defHttp.get<Result>({ url: `/admin/module/readRoleModules?roleId=${param.roleId}` });
-    const treeData: any[] = result.data;
-    return treeData;
-  }
-
   function transportSetModulesData(p: Recordable): Recordable {
     if (isArray(p) && p.length > 0) {
       return p[0];

@@ -9,9 +9,7 @@
   import { BasicTable, useTable } from '/@/components/Table';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { adminFunctionViewDrawerProps } from './props';
-  import { defHttp } from '/@/utils/http/axios';
-  import { PageData, accessTypeTags, TagRender, readTableData, PageRequestOptions } from '/@/utils/osharp';
-  import { Result } from '/#/axios';
+  import { accessTypeTags, TagRender, readTableData, PageRequestOptions } from '/@/utils/osharp';
 
   const props = defineProps(adminFunctionViewDrawerProps);
   const module = computed(() => props.module).value;

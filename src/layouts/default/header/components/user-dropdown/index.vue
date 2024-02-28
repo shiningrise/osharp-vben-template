@@ -35,7 +35,7 @@ import { DOC_URL } from '@/settings/siteSetting';
 import { useUserStore } from '@/store/modules/user';
 import { usePermissionStore } from '@/store/modules/permission';
 import { useHeaderSetting } from '@/hooks/setting/useHeaderSetting';
-  import { useMessage } from '/@/hooks/web/useMessage';
+import { useMessage } from '/@/hooks/web/useMessage';
 import { useI18n } from '@/hooks/web/useI18n';
 import { useDesign } from '@/hooks/web/useDesign';
 import { useModal } from '@/components/Modal';
@@ -82,7 +82,7 @@ async function handleRefreshAuth() {
   const store = usePermissionStore();
   await store.changePermissionCode();
   createMessage.success("用户权限刷新成功");
- }
+}
 
 //  login out
 function handleLoginOut() {

@@ -20,26 +20,22 @@
   </Row>
 </template>
 <script lang="ts" setup>
-import { PropType, ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { Row, Col, Select, SelectOption, Button } from 'ant-design-vue';
 import { cloneDeep } from 'lodash';
 import { FilterGroup, FilterRule, FilterOperate, EntityProperty, defFilterGroup, defGroupOperateEntries, getGuid } from '/@/utils/osharp';
 import { FilterRuleV } from '/@/components/Osharp';
 import { readEntityPropertiesApi } from '/@/api/osharp';
 
-const props = defineProps({
-  group: { type: Object as PropType<FilterGroup>, required: true },
-  entity: { type: String, required: true },
-});
+const props = defineProps<{ group: FilterGroup; entity: string; }>();
 
-const group = ref<FilterGroup>(props.group);
 const entityProperties = ref<EntityProperty[]>([]);
 
 const emits = defineEmits(['remove']);
 
 watchEffect(async () => {
-  if (group.value && (!group.value.level || group.value.level < 1)) {
-    groupInit(group.value);
+  if (props.group && (!props.group.level || props.group.level < 1)) {
+    groupInit(props.group);
   }
   if (props.entity) {
     entityProperties.value = await readEntityPropertiesApi(props.entity);
@@ -59,8 +55,8 @@ function groupInit(group: FilterGroup) {
 function addGroup() {
   let newGroup = cloneDeep(defFilterGroup);
   newGroup['key'] = getGuid();
-  newGroup.level = (group.value.level || 1) + 1;
-  group.value.groups.push(newGroup);
+  newGroup.level = (props.group.level || 1) + 1;
+  props.group.groups.push(newGroup);
 }
 
 function addRule() {
@@ -74,27 +70,27 @@ function addRule() {
     isLowerCaseToUpperCase: true,
   };
   newRule['key'] = getGuid();
-  if (!group.value.rules) {
-    group.value.rules = [];
+  if (!props.group.rules) {
+    props.group.rules = [];
   }
-  group.value.rules.push(newRule);
+  props.group.rules.push(newRule);
 }
 
 function fireRemove() {
-  emits('remove', group.value);
+  emits('remove', props.group);
 }
 
 function handleRemoveGroup(removedGroup: FilterGroup) {
-  const index = group.value.groups.indexOf(removedGroup);
+  const index = props.group.groups.indexOf(removedGroup);
   if (index !== -1) {
-    group.value.groups.splice(index, 1);
+    props.group.groups.splice(index, 1);
   }
 }
 
 function handleRemoveRule(removedRule: FilterRule) {
-  const index = group.value.rules.indexOf(removedRule);
+  const index = props.group.rules.indexOf(removedRule);
   if (index !== -1) {
-    group.value.rules.splice(index, 1);
+    props.group.rules.splice(index, 1);
   }
 }
 </script>

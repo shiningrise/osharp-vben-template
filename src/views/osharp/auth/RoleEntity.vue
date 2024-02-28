@@ -14,7 +14,7 @@
       <template #expandedRowRender="{ record }">
         <div>
           <FilterGroupV :group="record.filterGroup || { rules: [], groups: [], operate: FilterOperate.And, level: 1 }"
-            :entity="record.entityType"></FilterGroupV>
+            :entity="record.entityType" />
           <Button @click="showGroupJson(record)" type="primary" style="margin: 5px;">显示JSON</Button>
           <Authority :value="`${authPath}.SetFilterGroup`">
             <Button @click="saveFilterGroup(record)" type="default" style="margin: 5px;">保存</Button>
@@ -24,14 +24,16 @@
         </div>
       </template>
     </AdminTable>
+    <!-- <AdminSearchDrawer @register="registerSearchDrawer" v-bind="searchProps" width="800"/> -->
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { Button, Alert } from 'ant-design-vue';
-import { AdminTable, AdminTableProps, FilterGroupV } from '/@/components/Osharp';
+import { AdminSearchDrawer, AdminTable, AdminTableProps, FilterGroupV } from '/@/components/Osharp';
 import { ActionItem, BasicColumn, BasicTableProps, FormSchema, FormProps } from '/@/components/Table';
+import { useDrawer } from "/@/components/Drawer";
 import { Authority } from '/@/components/Authority';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { cloneDeep } from 'lodash';
@@ -96,6 +98,9 @@ function tableActionsFn(items: ActionItem[], record: Recordable) {
 }
 
 function tableDropDownActionsFn(items: ActionItem[], record: Recordable) {
+  items.push(
+    { icon: 'ant-design:safety-certificate-outlined', label: '设置权限', onClick: setFilterGroup.bind(null, record) }
+  );
   return items;
 }
 
@@ -110,26 +115,40 @@ function editFormPropsFn(p: FormProps): FormProps {
 
 function showGroupJson(record: Recordable) {
   let group = cloneDeep(record.filterGroup);
-  cleanGroup(group);
-  //record.groupJson = JSON.stringify(group, null, 2);
-  record.groupJson = authPath;
+  cleanGroup(group, true);
+  record.groupJson = JSON.stringify(group, null, 2);
 }
 
 async function saveFilterGroup(record: Recordable) {
   let group = cloneDeep(record.filterGroup);
-  cleanGroup(group);
+  cleanGroup(group, false);
   await setRoleEntityFilterGroupApi(record.id, group);
 }
 
-function cleanGroup(group: FilterGroup) {
-  delete group['key'];
+function cleanGroup(group: FilterGroup, clear: boolean) {
+  Reflect.deleteProperty(group, 'key');
+  Reflect.deleteProperty(group, 'level');
   for (let index = 0; index < group.rules.length; index++) {
     const rule = group.rules[index];
-    delete rule['key'];
+    Reflect.deleteProperty(rule, 'key');
+    if (clear) {
+      Reflect.deleteProperty(rule, 'isLowerCaseToUpperCase');
+    }
   }
   for (const subGroup of group.groups) {
-    cleanGroup(subGroup);
+    cleanGroup(subGroup, clear);
   }
 }
+
+// #region 设置过滤条件组
+
+const [registerSearchDrawer, searchDrawerMethods] = useDrawer();
+const searchProps = ref();
+
+function setFilterGroup(record: Recordable) {
+  console.log(record);
+}
+
+// #endregion
 
 </script>

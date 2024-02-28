@@ -39,21 +39,21 @@ import { PropType, ref, watch, onMounted } from 'vue';
 import { Row, Col, Select, SelectOption, DatePicker, Input, InputNumber, Switch, Button } from 'ant-design-vue';
 import { FilterRule, EntityProperty, FilterOperate, FilterOperateEntry, getHashCode } from '/@/utils/osharp';
 
-const props = defineProps({
-  rule: { type: Object as PropType<FilterRule>, required: true },
-  properties: { type: Array as PropType<EntityProperty[]>, required: true },
-});
+// const props = defineProps({
+//   rule: { type: Object as PropType<FilterRule>, required: true },
+//   properties: { type: Array as PropType<EntityProperty[]>, required: true },
+// });
+const props = defineProps<{ rule: FilterRule; properties: EntityProperty[]; }>();
 const emits = defineEmits(['remove']);
 
-const rule = ref(props.rule);
 const operateEntries = ref<FilterOperateEntry[]>([]);
 const property = ref<EntityProperty>();
 
 onMounted(() => {
-  fieldChange(rule.value.field);
+  fieldChange(props.rule.field);
 });
 
-watch(() => rule.value.field, newField => {
+watch(() => props.rule.field, newField => {
   fieldChange(newField);
 });
 
@@ -77,14 +77,14 @@ function fieldChange(field: string) {
   switch (property.value.typeName) {
     case 'System.Boolean':
       entries = getOperateEntries([FilterOperate.Equal, FilterOperate.NotEqual]);
-      if (!rule.value.value) {
-        rule.value.value = false;
+      if (!props.rule.value) {
+        props.rule.value = false;
       }
       break;
     case 'System.Guid':
       entries = getOperateEntries([FilterOperate.Equal, FilterOperate.NotEqual]);
-      if (!rule.value.value) {
-        rule.value.value = '';
+      if (!props.rule.value) {
+        props.rule.value = '';
       }
       break;
     case 'System.Int32':
@@ -99,14 +99,14 @@ function fieldChange(field: string) {
           FilterOperate.Greater,
           FilterOperate.GreaterOrEqual,
         ]);
-        if (!rule.value.value) {
-          rule.value.value = 0;
+        if (!props.rule.value) {
+          props.rule.value = 0;
         }
       } else {
         //枚举类型
         entries = getOperateEntries([FilterOperate.Equal, FilterOperate.NotEqual]);
-        if (!rule.value.value) {
-          rule.value.value = property.value.valueRange[0].id;
+        if (!props.rule.value) {
+          props.rule.value = property.value.valueRange[0].id;
         }
       }
       break;
@@ -119,8 +119,8 @@ function fieldChange(field: string) {
         FilterOperate.Greater,
         FilterOperate.GreaterOrEqual,
       ]);
-      if (!rule.value.value) {
-        rule.value.value = new Date();
+      if (!props.rule.value) {
+        props.rule.value = new Date();
       }
       break;
     case 'System.String':
@@ -132,8 +132,8 @@ function fieldChange(field: string) {
         FilterOperate.Contains,
         FilterOperate.NotContains,
       ]);
-      if (!rule.value.value) {
-        rule.value.value = '';
+      if (!props.rule.value) {
+        props.rule.value = '';
       }
       break;
     default:
@@ -149,14 +149,14 @@ function fieldChange(field: string) {
         FilterOperate.Contains,
         FilterOperate.NotContains,
       ]);
-      if (!rule.value.value) {
-        rule.value.value = '';
+      if (!props.rule.value) {
+        props.rule.value = '';
       }
       break;
   }
   operateEntries.value = entries;
-  if (!rule.value.operate || !operateEntries.value.find((m) => m.operate === rule.value.operate)) {
-    rule.value.operate = operateEntries.value[0].operate;
+  if (!props.rule.operate || !operateEntries.value.find((m) => m.operate === props.rule.operate)) {
+    props.rule.operate = operateEntries.value[0].operate;
   }
 }
 
