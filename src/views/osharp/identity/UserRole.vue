@@ -27,6 +27,7 @@
     moduleDisplay: '身份认证',
     entityName: 'UserRole',
     entityDisplay: '用户角色',
+    entityFullName: 'OSharp.Hosting.Identity.Entities.UserRole,OSharp.Hosting.Core'
   };
   const authPath = computed(() => `Root.${module.areaName}.${module.moduleName}.${module.entityName}`).value;
   const { createMessage } = useMessage();

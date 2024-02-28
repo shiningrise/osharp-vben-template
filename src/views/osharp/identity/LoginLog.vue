@@ -27,6 +27,7 @@
     moduleDisplay: '身份认证',
     entityName: 'LoginLog',
     entityDisplay: '登录日志',
+    entityFullName: 'OSharp.Hosting.Identity.Entities.LoginLog,OSharp.Hosting.Core'
   };
   const authPath = computed(() => `Root.${module.areaName}.${module.moduleName}.${module.entityName}`).value;
   const { createMessage } = useMessage();

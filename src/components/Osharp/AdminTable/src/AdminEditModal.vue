@@ -1,23 +1,23 @@
 <template>
-  <BasicModal @register="registerModal" @ok="submit" v-bind="$attrs" :destroy-on-close="true">
+  <BasicModal @register="registerModal" @ok="submit()" v-bind="$attrs" :destroy-on-close="true">
     <BasicForm @register="registerForm" />
   </BasicModal>
 </template>
 
 <script lang="ts" setup>
   import { ref } from 'vue';
-  import { BasicModal, useModalInner } from '/@/components/Modal';
-  import { BasicForm, FormProps, useForm } from '/@/components/Form';
-  import { adminEditModalProps } from './props';
+  import { Result } from '/#/axios';
   import { defHttp } from '/@/utils/http/axios';
   import { ResultEnum } from '/@/enums/httpEnum';
-  import { Result } from '/#/axios';
   import { EditModalDataWrap } from '/@/utils/osharp';
+  import { adminEditModalProps } from './props';
+  import { BasicModal, useModalInner } from '/@/components/Modal';
+  import { BasicForm, FormProps, useForm } from '/@/components/Form';
 
   const url = ref('');
   const props = defineProps(adminEditModalProps);
 
-  const emits = defineEmits(['onClose', 'register']);
+  const emits = defineEmits(['register','submit']);
 
   const [registerForm, formMethods] = useForm(getEditFormProps());
   const [registerModal, modalMethods] = useModalInner((data: EditModalDataWrap) => {
@@ -52,7 +52,7 @@
       const result = await defHttp.post<Result>({ url: url.value, params: params });
       if (result.type == ResultEnum.SUCCESS) {
         formMethods.resetFields();
-        emits('onClose');
+        emits('submit');
         modalMethods.closeModal();
       }
     } catch (e) {

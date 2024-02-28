@@ -27,13 +27,14 @@
     moduleDisplay: '权限授权',
     entityName: 'EntityInfo',
     entityDisplay: '实体',
+    entityFullName: 'OSharp.Authorization.EntityInfos.EntityInfo,OSharp'
   };
   const authPath = computed(() => `Root.${module.areaName}.${module.moduleName}.${module.entityName}`).value;
   const { createMessage } = useMessage();
 
   const columns: BasicColumn[] = [
-    { title: '实体名称', dataIndex: 'name', align: 'left', sorter: true, width: 150 },
-    { title: '实体类型名称', dataIndex: 'typeName', align: 'left', sorter: true, width: 150 },
+    { title: '实体名称', dataIndex: 'name', align: 'left', sorter: true, width: 120 },
+    { title: '实体类型名称', dataIndex: 'typeName', align: 'left', sorter: true, width: 200 },
     { title: '是否数据审计', dataIndex: 'auditEnabled', sorter: true, width: 100, customRender: ({ text }) => CheckboxRender(text) },
   ];
 

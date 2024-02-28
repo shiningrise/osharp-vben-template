@@ -5,6 +5,7 @@ export interface ModuleInfo {
   moduleDisplay: string;
   entityName: string;
   entityDisplay: string;
+  entityFullName?: string;
 }
 
 /** 页数据 */

@@ -112,12 +112,8 @@ function fieldChange(field: string) {
       break;
     case 'System.DateTime':
       entries = getOperateEntries([
-        FilterOperate.Equal,
-        FilterOperate.NotEqual,
         FilterOperate.Less,
-        FilterOperate.LessOrEqual,
         FilterOperate.Greater,
-        FilterOperate.GreaterOrEqual,
       ]);
       if (!props.rule.value) {
         props.rule.value = new Date();
@@ -135,6 +131,7 @@ function fieldChange(field: string) {
       if (!props.rule.value) {
         props.rule.value = '';
       }
+      props.rule.operate = entries[4].operate;
       break;
     default:
       entries = getOperateEntries([
@@ -149,9 +146,6 @@ function fieldChange(field: string) {
         FilterOperate.Contains,
         FilterOperate.NotContains,
       ]);
-      if (!props.rule.value) {
-        props.rule.value = '';
-      }
       break;
   }
   operateEntries.value = entries;

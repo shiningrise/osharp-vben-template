@@ -112,12 +112,19 @@ export function getHashCode(obj: any): number {
   return hash;
 }
 
-/** 生成Guid */
-export function getGuid(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
+export function cleanFilterGroup(group: FilterGroup, clear: boolean) {
+  Reflect.deleteProperty(group, 'key');
+  Reflect.deleteProperty(group, 'level');
+  for (let index = 0; index < group.rules.length; index++) {
+    const rule = group.rules[index];
+    Reflect.deleteProperty(rule, 'key');
+    if (clear) {
+      Reflect.deleteProperty(rule, 'isLowerCaseToUpperCase');
+    }
+  }
+  for (const subGroup of group.groups) {
+    cleanFilterGroup(subGroup, clear);
+  }
 }
 
 //#endregion

@@ -23,7 +23,8 @@
 import { ref, watchEffect } from 'vue';
 import { Row, Col, Select, SelectOption, Button } from 'ant-design-vue';
 import { cloneDeep } from 'lodash';
-import { FilterGroup, FilterRule, FilterOperate, EntityProperty, defFilterGroup, defGroupOperateEntries, getGuid } from '/@/utils/osharp';
+import { buildShortUUID } from "/@/utils/uuid";
+import { FilterGroup, FilterRule, FilterOperate, EntityProperty, defFilterGroup, defGroupOperateEntries } from '/@/utils/osharp';
 import { FilterRuleV } from '/@/components/Osharp';
 import { readEntityPropertiesApi } from '/@/api/osharp';
 
@@ -54,7 +55,7 @@ function groupInit(group: FilterGroup) {
 
 function addGroup() {
   let newGroup = cloneDeep(defFilterGroup);
-  newGroup['key'] = getGuid();
+  newGroup['key'] = buildShortUUID();
   newGroup.level = (props.group.level || 1) + 1;
   props.group.groups.push(newGroup);
 }
@@ -69,7 +70,7 @@ function addRule() {
     value: undefined,
     isLowerCaseToUpperCase: true,
   };
-  newRule['key'] = getGuid();
+  newRule['key'] = buildShortUUID();
   if (!props.group.rules) {
     props.group.rules = [];
   }

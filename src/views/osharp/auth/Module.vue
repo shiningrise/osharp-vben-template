@@ -34,6 +34,7 @@
     moduleDisplay: '权限授权',
     entityName: 'Module',
     entityDisplay: '模块',
+    entityFullName: 'OSharp.Hosting.Authorization.Entities.Module,OSharp.Hosting.Core'
   };
   const authPath = computed(() => `Root.${module.areaName}.${module.moduleName}.${module.entityName}`).value;
   const { createMessage } = useMessage();

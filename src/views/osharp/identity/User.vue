@@ -12,19 +12,13 @@
   <div>
     <AdminTable @register="registerTable" v-bind="adminTableProps" />
     <AdminFunctionViewDrawer @register="registerFunctionViewDrawer" v-bind="functionViewProps" width="800" />
-    <AdminEditModal
-      @register="registerSetRolesModal"
-      :module="module"
-      :edit-form-props-fn="setRolesFormFn"
-      :transport-submit-data="transportSetRoleData"
-      @on-close="tableMethods.reload()"
-    />
+    <AdminEditModal @register="registerSetRolesModal" :module="module" :edit-form-props-fn="setRolesFormFn" :transport-submit-data="transportSetRoleData" @on-close="tableMethods.reload()"/>
   </div>
 </template>
 
 <script lang="ts" setup>
   import { Empty, CheckboxGroup } from 'ant-design-vue';
-  import { computed, h } from 'vue';
+  import { computed, h, ref } from 'vue';
   import { Result } from '/#/axios';
   import { useDrawer } from '/@/components/Drawer';
   import { useModal } from '/@/components/Modal';
@@ -40,6 +34,7 @@
     moduleDisplay: '身份认证',
     entityName: 'User',
     entityDisplay: '用户',
+    entityFullName: 'OSharp.Hosting.Identity.Entities.User,OSharp.Hosting.Core'
   };
   const authPath = computed(() => `Root.${module.areaName}.${module.moduleName}.${module.entityName}`).value;
   const { createMessage } = useMessage();

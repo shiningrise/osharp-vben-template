@@ -24,20 +24,19 @@
         </div>
       </template>
     </AdminTable>
-    <!-- <AdminSearchDrawer @register="registerSearchDrawer" v-bind="searchProps" width="800"/> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
 import { Button, Alert } from 'ant-design-vue';
-import { AdminSearchDrawer, AdminTable, AdminTableProps, FilterGroupV } from '/@/components/Osharp';
+import { AdminTable, AdminTableProps, FilterGroupV } from '/@/components/Osharp';
 import { ActionItem, BasicColumn, BasicTableProps, FormSchema, FormProps } from '/@/components/Table';
 import { useDrawer } from "/@/components/Drawer";
 import { Authority } from '/@/components/Authority';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { cloneDeep } from 'lodash';
-import { CheckboxRender, TagRender, defaultModuleInfo, ModuleInfo, FilterOperate, transTagToOptions, dataAuthOperationTags, FilterGroup } from '/@/utils/osharp';
+import { CheckboxRender, TagRender, defaultModuleInfo, ModuleInfo, FilterOperate, transTagToOptions, dataAuthOperationTags, cleanFilterGroup } from '/@/utils/osharp';
 import { readRoleNodeApi, readEntityinfoNodeApi, setRoleEntityFilterGroupApi } from '/@/api/osharp';
 
 const module: ModuleInfo = {
@@ -46,6 +45,7 @@ const module: ModuleInfo = {
   moduleDisplay: '权限授权',
   entityName: 'RoleEntity',
   entityDisplay: '数据权限',
+  entityFullName: 'OSharp.Hosting.Authorization.Entities.EntityRole,OSharp.Hosting.Core'
 };
 const authPath = computed(() => `Root.${module.areaName}.${module.moduleName}.${module.entityName}`).value;
 const { createMessage } = useMessage();
@@ -115,29 +115,14 @@ function editFormPropsFn(p: FormProps): FormProps {
 
 function showGroupJson(record: Recordable) {
   let group = cloneDeep(record.filterGroup);
-  cleanGroup(group, true);
+  cleanFilterGroup(group, true);
   record.groupJson = JSON.stringify(group, null, 2);
 }
 
 async function saveFilterGroup(record: Recordable) {
   let group = cloneDeep(record.filterGroup);
-  cleanGroup(group, false);
+  cleanFilterGroup(group, false);
   await setRoleEntityFilterGroupApi(record.id, group);
-}
-
-function cleanGroup(group: FilterGroup, clear: boolean) {
-  Reflect.deleteProperty(group, 'key');
-  Reflect.deleteProperty(group, 'level');
-  for (let index = 0; index < group.rules.length; index++) {
-    const rule = group.rules[index];
-    Reflect.deleteProperty(rule, 'key');
-    if (clear) {
-      Reflect.deleteProperty(rule, 'isLowerCaseToUpperCase');
-    }
-  }
-  for (const subGroup of group.groups) {
-    cleanGroup(subGroup, clear);
-  }
 }
 
 // #region 设置过滤条件组

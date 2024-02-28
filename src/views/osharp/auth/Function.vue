@@ -27,6 +27,7 @@
     moduleDisplay: '权限授权',
     entityName: 'Function',
     entityDisplay: '功能',
+    entityFullName: 'OSharp.Authorization.Functions.Function,OSharp'
   };
   const authPath = computed(() => `Root.${module.areaName}.${module.moduleName}.${module.entityName}`).value;
   const { createMessage } = useMessage();
