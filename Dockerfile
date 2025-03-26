@@ -1,21 +1,23 @@
 # node 构建
-FROM node:20-alpine as build-stage
+FROM registry.cn-hangzhou.aliyuncs.com/shiningrise/node:20.11.0 as build-stage
 # 署名
 MAINTAINER Adoin 'adoin@qq.com'
 WORKDIR /app
 COPY . ./
+#RUN docker builder prune -f
 # 设置 node 阿里镜像
 RUN npm config set registry https://registry.npmmirror.com
 # 设置--max-old-space-size
 ENV NODE_OPTIONS=--max-old-space-size=16384
 # 设置阿里镜像、pnpm、依赖、编译
-RUN npm install pnpm -g && \
-    pnpm install --frozen-lockfile && \
-    pnpm build:docker
+RUN npm install pnpm@8.15.4 -g && \
+    pnpm config set registry https://registry.npmmirror.com && \
+    pnpm install --verbose && \
+    pnpm build:docker || (echo "构建失败，查看详细日志：" && cat /app/pnpm-debug.log && exit 1)
 # node部分结束
 RUN echo "🎉 编 🎉 译 🎉 成 🎉 功 🎉"
 # nginx 部署
-FROM nginx:1.23.3-alpine as production-stage
+FROM registry.cn-hangzhou.aliyuncs.com/shiningrise/nginx:1.27.3 as production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html/dist
 COPY --from=build-stage /app/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
