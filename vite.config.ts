@@ -18,7 +18,7 @@ export default defineApplicationConfig({
       port: 3200,
       proxy: {
         '/basic-api': {
-          target: 'http://localhost:7001/api',
+          target: 'https://api.osharp.top/api',
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/basic-api`), ''),
@@ -26,7 +26,7 @@ export default defineApplicationConfig({
           // secure: false
         },
         '/upload': {
-          target: 'http://localhost:3300/upload',
+          target: 'http://api.osharp.top/upload',
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/upload`), ''),

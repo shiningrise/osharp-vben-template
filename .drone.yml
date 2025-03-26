@@ -1,0 +1,54 @@
+kind: pipeline
+name: default
+
+steps:
+
+- name: build
+  image: docker:dind #选择docker:dind镜像
+  volumes:
+  - name: docker-sock
+    path: /var/run/docker.sock #映射宿主机Docker
+  environment:
+    DOCKER_PASSWORD:
+      from_secret: ALIYUN_DOCKER_PASSWORD
+  commands:
+  - docker -v
+  - docker build -t registry.cn-hangzhou.aliyuncs.com/shiningrise/osharp_web:v9.0.0 -f Dockerfile .
+  - docker login --username=shiningrise@aliyun.com --password=$DOCKER_PASSWORD registry.cn-hangzhou.aliyuncs.com
+  - docker push registry.cn-hangzhou.aliyuncs.com/shiningrise/osharp_web:v9.0.0
+  - echo 项目构建且推送成功
+
+- name: deploy
+  image: appleboy/drone-ssh
+  pull: true
+  settings:
+    host: wxy.vip
+    port: 22
+    username: root
+    password: 
+      from_secret: wxy_vip_server_password
+    command_timeout: 5m  # 增加超时时间，解决context deadline exceeded问题
+    script_stop: false   # 即使某个命令失败也继续执行后续命令
+    script: 
+      - source /etc/profile
+      - ls -la
+      - docker info
+      - docker stop `docker ps -a| grep osharp_web | awk '{print $1}'` || true
+      - docker rm  $(docker ps -a | grep Exited | awk '{print $1}') || true
+      - docker rm  $(docker ps -a | grep Created | awk '{print $1}') || true
+      #- docker rmi $(docker images | grep "none" | awk '{print $3}')     
+      - echo 项目清理成功
+      - cd /data/
+      - docker pull registry-vpc.cn-hangzhou.aliyuncs.com/shiningrise/osharp_web:v9.0.0
+      - docker compose up -d
+      - echo 项目部署成功
+      
+volumes:
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+      
+# 可限制哪些分支可以推送自动 CICD
+trigger:
+  branch:  
+    - main
